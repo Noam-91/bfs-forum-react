@@ -4,7 +4,7 @@ import type IUser from "../../shared/models/IUser.ts";
 import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 
 export const login = createAsyncThunk(
-    'user/login',
+    'auth/login',
     async (loginForm: FormData, thunkAPI) => {
         try {
             const response = await axios.post(`${process.env.BACKEND_API}/login`, loginForm);
@@ -18,7 +18,7 @@ export const login = createAsyncThunk(
 );
 
 export const logout = createAsyncThunk(
-    'user/logout',
+    'auth/logout',
     async (_,thunkAPI) => {
         try{
             await axios.post(`${process.env.BACKEND_API}/logout`,null,{withCredentials:true});
@@ -29,19 +29,8 @@ export const logout = createAsyncThunk(
     }
 );
 
-export const register = createAsyncThunk(
-    'user/register',
-    async (registerForm: FormData, thunkAPI) => {
-        try {
-            await axios.post(`${process.env.BACKEND_API}/register`, registerForm);
-        } catch (error) {
-            return handleThunkAxiosError(error, thunkAPI);
-        }
-    }
-);
-
 export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unknown}>(
-    'user/checkAuth',
+    'auth/checkAuth',
     async (_, thunkAPI) => {
         try {
             const response = await axios.get(`${process.env.BACKEND_API}/checkAuth`, {withCredentials:true});

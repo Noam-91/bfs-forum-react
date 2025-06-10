@@ -1,3 +1,7 @@
 export default interface IErrorResponse{
-    error: string
+    error: string;
+    status?: number;
+    timestamp?: Date;
+    path?: string;
+    requestId?: string;
 }
