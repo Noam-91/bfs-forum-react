@@ -1,0 +1,75 @@
+@import '../../assets/css/post/_post.scss';
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $spacing-lg;
+  background-color: $color-white;
+  min-height: 100vh;
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+}
+
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  color: $color-text;
+}
+
+.filterTabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-md;
+  border-bottom: $border-width solid $color-border;
+}
+
+.tab {
+  padding: $spacing-sm $spacing-md;
+  border: $border-width solid $color-border;
+  background: $color-white;
+  color: $color-text-secondary;
+  font-size: $font-size-base;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: $border-radius;
+
+  &:hover {
+    border-color: $color-primary;
+    color: $color-primary;
+  }
+
+  &.active {
+    background: $color-primary;
+    color: $color-white;
+    border-color: $color-primary;
+  }
+}
+
+.postListPage {
+  // Posts list styles
+}
+
+.postItem {
+  padding: $spacing-lg 0;
+  border-bottom: $border-width solid $color-border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.postTitle {
+  font-size: $font-size-lg;
+  font-weight: 500;
+  color: $color-text;
+}
+
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl * 2;
+  color: $color-text-secondary;
+}
