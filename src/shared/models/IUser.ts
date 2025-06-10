@@ -1,8 +1,8 @@
 export default interface IUser{
     id?:string,
-    email:string,
-    password:string,
+    username:string,
+    password?:string,
     role:Role
 }
 
-type Role = "ADMIN" | "USER";
+type Role = "VISITOR" | "UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";

@@ -1,3 +1,3 @@
 export default interface IErrorResponse{
-    message: string
+    error: string
 }
