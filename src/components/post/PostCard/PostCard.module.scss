@@ -1,0 +1,21 @@
+// PostCard.module.scss
+.postCard {
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.postTitle {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.postMeta {
+  font-size: 13px;
+  color: #666;
+}
