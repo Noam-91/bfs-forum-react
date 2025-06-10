@@ -24,9 +24,9 @@ export const handleThunkAxiosError = (
         if (axiosError.response) {
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
-            if (axiosError.response.data && axiosError.response.data.message) {
+            if (axiosError.response.data && axiosError.response.data.error) {
                 // Prioritize backend-provided error message
-                return thunkAPI.rejectWithValue(axiosError.response.data.message);
+                return thunkAPI.rejectWithValue(axiosError.response.data.error);
             } else {
                 // Fallback to Axios status/statusText if no specific message from backend
                 return thunkAPI.rejectWithValue(
