@@ -35,7 +35,7 @@ const Login = () => {
     useEffect(() => {
         if (isLoggedIn) {
             showAlert('success', 'Login', 'Login successful!');
-            navigate('/home');
+            navigate('/admin/users');
         }
     }, [isLoggedIn, navigate, showAlert]);
 
