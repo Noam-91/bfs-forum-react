@@ -1,0 +1,29 @@
+.postDetailAdmin {
+  padding: 2rem; // space from screen edges
+}
+
+.nav {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+}
+
+.adminCard {
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.reportList {
+  margin-top: 0.5rem;
+}

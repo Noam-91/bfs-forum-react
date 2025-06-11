@@ -6,13 +6,15 @@ interface IUserState {
     user: IUser | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
+    role: "admin"|"user"|null;
 }
 const userSlice = createSlice({
     name: "user",
     initialState: {
         user: null,
         status: 'idle',
-        error: null
+        error: null,
+        role:null
     } as IUserState,
     reducers: { },
     extraReducers:(builder)=>{
