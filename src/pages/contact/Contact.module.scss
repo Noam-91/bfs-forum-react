@@ -1,0 +1,88 @@
+/* Contact.module.scss */
+
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Roboto', sans-serif; /* Recommended font for Material-UI aesthetic */
+}
+
+.heading {
+  text-align: center;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.subHeading {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.form {
+  width: 100%;
+}
+
+.messageContainer {
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  border-width: 1px;
+  border-style: solid; // Ensure border style is set for consistency
+}
+
+.successMessage {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.errorMessage {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.loadingMessage {
+  background-color: #e2e3e5;
+  color: #343a40;
+  border-color: #d6d8db;
+}
+
+.textFieldWrapper {
+  /* This class can be used to apply margin-bottom to TextField containers */
+  margin-bottom: 16px;
+
+  /* For the last TextField, adjust margin if needed */
+  &:last-of-type {
+    margin-bottom: 24px; /* More space before the button */
+  }
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #1976d2; /* Mimics Material-UI's primary blue */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #115293; /* Darker blue on hover */
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    background-color: #90caf9; /* Lighter blue when disabled, closer to MUI default */
+  }
+}

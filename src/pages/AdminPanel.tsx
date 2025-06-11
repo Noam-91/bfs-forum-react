@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState } from "../redux/store";
-import { fetchPosts, moderatePost } from "../redux/postsSlice/posts.slice";
+import type { RootState, AppDispatch } from "../redux/store";
+// import { fetchPosts, moderatePost } from "../redux/postsSlice/posts.slice";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
@@ -9,66 +9,70 @@ import Select from "@mui/material/Select";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
-import type { AppDispatch } from "../redux/store";
 import styles from "./AdminPanel.module.scss";
 import { useNavigate } from "react-router-dom";
+import type { IPost } from "../shared/models/IPost";
+import { getQueriedPosts, transferPostStatus } from "../redux/postSlice/post.thunks";
 
-interface Report {
-  reporter: string;
-  reason: string;
-}
 
-interface Post {
-  id: string;
-  title: string;
-  publishedAt: string;
-  replies: number;
-  views: number;
-  reports: Report[];
-  status: "published" | "banned" | "deleted" | "hidden" | "unpublished";
-  author: string;
-  banReason?: string;
-  deleteReason?: string;
-}
 
 const AdminPanel: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
-  const posts = useSelector((state: RootState) => state.posts.list);
-  const authors = useSelector((state: RootState) => state.posts.authors);
+  const postPage = useSelector((state: RootState) => state.post.postPage);
+  const posts = postPage?.content ?? [];
 
-  const [filter, setFilter] = useState<"all" | "published" | "banned" | "deleted" | "hidden" | "unpublished">("all");
+  const authors = Array.from(new Set(
+    posts.map(post => `${post.userInfo.firstName} ${post.userInfo.lastName}`)
+  ));
+
+  const [filter, setFilter] = useState<"all" | "PUBLISHED" | "BANNED" | "DELETED">("all");
   const [search, setSearch] = useState<string>("");
   const [selectedAuthor, setSelectedAuthor] = useState<string>("");
   const [sort, setSort] = useState<"latest" | "oldest">("latest");
 
   useEffect(() => {
-    dispatch(fetchPosts());
-  }, [dispatch]);
+    const queryParams = {
+      status: filter === "all" ? undefined : filter,
+      sort: sort === "latest" ? "DESC" : "ASC",
+      search,
+      author: selectedAuthor || undefined,
+    };
+    dispatch(getQueriedPosts(queryParams));
+  }, [dispatch, filter, sort, search, selectedAuthor]);
+
+
 
   const filteredPosts = posts
-    .filter((post: Post) =>
-      (filter === "all" || post.status === filter) &&
+    .filter((post: IPost) =>
+      (filter === "all"
+        ? !["HIDDEN", "UNPUBLISHED"].includes(post.status)
+        : post.status === filter) &&
       post.title.toLowerCase().includes(search.toLowerCase()) &&
-      (!selectedAuthor || post.author === selectedAuthor)
+      (!selectedAuthor ||
+        `${post.userInfo.firstName} ${post.userInfo.lastName}`
+          .toLowerCase()
+          .includes(selectedAuthor.toLowerCase()))
     )
-    .sort((a: Post, b: Post) =>
+    .sort((a: IPost, b: IPost) =>
       sort === "latest"
-        ? new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-        : new Date(a.publishedAt).getTime() - new Date(b.publishedAt).getTime()
+        ? new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+        : new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
     );
 
-  const allStatuses: Post["status"][] = ["published", "banned", "deleted", "hidden", "unpublished"];
-  type FilterType = "all" | Post["status"];
-  const allFilters: FilterType[] = ["all", ...allStatuses];
+
   const stats = {
-    total: posts.length,
-    ...Object.fromEntries(allStatuses.map(status => [status, posts.filter(p => p.status === status).length])),
+    Total: posts.length,
+    Published: posts.filter(p => p.status === "PUBLISHED").length,
+    Banned: posts.filter(p => p.status === "BANNED").length,
+    Deleted: posts.filter(p => p.status === "DELETED").length,
   };
+
+  const visibleFilters: Array<"all" | "PUBLISHED" | "BANNED" | "DELETED"> = ["all", "PUBLISHED", "BANNED", "DELETED"];
 
   return (
     <div className={styles.container}>
-      <nav className={styles.navbar}>Admin Panel</nav>
+      {/* <nav className={styles.navbar}>Admin Panel</nav> */}
 
       <div className={styles.statsContainer}>
         {Object.entries(stats).map(([key, value]) => (
@@ -82,16 +86,20 @@ const AdminPanel: React.FC = () => {
       </div>
 
       <div className={styles.filterContainer}>
-        {allFilters.map(status => (
+        {visibleFilters.map(status => (
           <Button
             key={status}
             onClick={() => setFilter(status)}
             variant={filter === status ? "contained" : "outlined"}
             color={
-              status === "banned"? "error": status === "deleted"? "secondary": "primary"                
+              status === "BANNED"
+                ? "warning"
+                : status === "DELETED"
+                ? "error"
+                : "primary"
             }
           >
-            {status[0].toUpperCase() + status.slice(1)}
+            {status[0].toUpperCase() + status.slice(1).toLowerCase()}
           </Button>
         ))}
         <TextField
@@ -113,9 +121,7 @@ const AdminPanel: React.FC = () => {
 
         <Select
           value={sort}
-          onChange={(event: SelectChangeEvent) =>
-            setSort(event.target.value as "latest" | "oldest")
-          }
+          onChange={(event: SelectChangeEvent) => setSort(event.target.value as "latest" | "oldest")}
         >
           <MenuItem value="latest">Latest</MenuItem>
           <MenuItem value="oldest">Oldest</MenuItem>
@@ -123,66 +129,55 @@ const AdminPanel: React.FC = () => {
       </div>
 
       <div className={styles.postsContainer}>
-        {filteredPosts.map((post: Post) => (
-          <Card key={post.id} className={`${styles.postCard} ${styles[`${post.status}Post`] || ""}`}>
+        {filteredPosts.map((post: IPost) => (
+          <Card key={post.id} className={`${styles.postCard} ${styles[`${post.status.toLowerCase()}Post`] || ""}`}>
             <div className={styles.postHeader}>
               <div className={styles.postInfo}>
                 <div className={styles.titleWithStatus}>
                   <h3 className={styles.postTitle}>{post.title}</h3>
-                  {post.status !== "published" && (
-                    <span className={`${styles.statusLabel} ${styles[`${post.status}Status`]}`}>
+                  {post.status !== "PUBLISHED" && (
+                    <span className={`${styles.statusLabel} ${styles[`${post.status.toLowerCase()}Status`]}`}>
                       {post.status}
                     </span>
                   )}
                 </div>
-                <p className={styles.publishedDate}>Published: {new Date(post.publishedAt).toLocaleString()}</p>
+                <p className={styles.publishedDate}>Published: {new Date(post.createdAt!).toLocaleString()}</p>
                 <div className={styles.postStats}>
-                  <span>Replies: {post.replies}</span>
-                  <span>Views: {post.views}</span>
-                  <span>Reports: {post.reports.length}</span>
+                  <span>Replies: {post.replyCount}</span>
+                  <span>Views: {post.viewCount}</span>
                 </div>
               </div>
               <div className={styles.postActions}>
                 <Button onClick={() => navigate(`/post/${post.id}`)} variant="outlined">View</Button>
-                <Button
-                  variant="contained"
-                  color={post.status === "published" ? "error" : "success"}
-                  onClick={() => dispatch(moderatePost(post.id))}
-                  disabled={post.status === "unpublished"} 
-                >
-                  {post.status === "hidden" && "Unhide Post"}
-                  {post.status === "deleted" && "Recover Post"}
-                  {post.status === "banned" && "Unban Post"}
-                  {post.status === "published" && "Ban Post"}
-                  {post.status === "unpublished" && "Ban Post"}
-                </Button>
+                {(post.status === "PUBLISHED" || post.status === "BANNED" || post.status === "DELETED") && (
+                  <Button
+                    variant="contained"
+                    color={
+                      post.status === "BANNED"
+                        ? "warning"  // Yellow
+                        : post.status === "PUBLISHED"
+                        ? "success"  // Green
+                        : "error"
+                    }
+                    onClick={() => {
+                      const operation =
+                        post.status === "PUBLISHED"
+                          ? "BAN"
+                          : post.status === "BANNED"
+                          ? "UNBAN"
+                          : "RECOVER";
+                      dispatch(transferPostStatus({ postId: post.id!, operation }));
+                    }}
+
+                  >
+                    {post.status === "PUBLISHED" && "Ban Post"}
+                    {post.status === "BANNED" && "Unban Post"}
+                    {post.status === "DELETED" && "Recover Post"}
+                  </Button>
+                )}
               </div>
             </div>
-
-            {post.status === "banned" && post.banReason && (
-              <div className={`${styles.reportsSection} ${styles.banReasonSection}`}>
-                <h4>Ban Reason:</h4>
-                <p className={styles.reasonText}>{post.banReason}</p>
-              </div>
-            )}
-
-            {post.status === "deleted" && post.deleteReason && (
-              <div className={`${styles.reportsSection} ${styles.deleteReasonSection}`}>
-                <h4>Delete Note:</h4>
-                <p className={styles.reasonText}>{post.deleteReason}</p>
-              </div>
-            )}
-
-            {post.status === "published" && post.reports.length > 0 && (
-              <div className={styles.reportsSection}>
-                <h4>Reports:</h4>
-                <ul className={styles.reportsList}>
-                  {post.reports.map((report: Report, idx: number) => (
-                    <li key={idx}><strong>{report.reporter}</strong>: {report.reason}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            
           </Card>
         ))}
       </div>
