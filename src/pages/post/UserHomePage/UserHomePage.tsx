@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { mockPublishedPosts } from '../../../mock/posts.mock';
 import { Post } from '../../../shared/models/post.model';
 import styles from './UserHomePage.module.scss';
+import {postService} from '../../../components/post/service/post.service';
+
+
+// test function
+const testBackendConnection = async () => {
+    try{
+        console.log('Testing backend connection...');
+        const response = await postService.getPublishedPosts();
+        console.log('Success! Response:', response);
+    } catch(error){
+        console.error('Backend connection faile:', error);
+    }
+};
 
 type SortOption = 'latest' | 'mostReplies';
 type FilterOption = 'all' | string; // 'all' or specific userId
 
 const UserHomePage: React.FC = () => {
   const navigate = useNavigate();
+
+  // test connection
+  useEffect(() => {
+    localStorage.setItem('userId', 'test-user-id');
+    localStorage.setItem('userRole', 'USER');
+    testBackendConnection();
+  });
   
   // State
   const [posts, setPosts] = useState<Post[]>(mockPublishedPosts);

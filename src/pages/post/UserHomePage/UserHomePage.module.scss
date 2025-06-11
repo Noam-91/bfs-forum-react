@@ -1,3 +1,4 @@
+@use "sass:color";
 @use '../../../assets/css/post/_post.scss' as *;
 
 .container {
@@ -35,7 +36,7 @@
   transition: background-color 0.2s;
   
   &:hover {
-    background-color: darken($color-primary, 10%);
+    background-color: color.adjust($color-primary, $lightness: 10%);
   }
 }
 
@@ -147,7 +148,7 @@
   transition: background-color 0.2s;
   
   &:hover {
-    background-color: darken($color-primary, 10%);
+    background-color: color.adjust($color-primary, $lightness: 10%);
   }
 }
 

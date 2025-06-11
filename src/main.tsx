@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')!).render(
                   <Route path="/*" element={<AppLayout />} >
                     <Route index element={<UserHomePage/>}/>
                     <Route index element={<PostListPage/>}/>
-                    <Route path="posts/create" element={<PostFormPage mode="create"/>}/>
+                    <Route path="posts/new" element={<PostFormPage mode="create"/>}/>
                     <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/>
 
                     <Route element={<AuthGuard/>}>
