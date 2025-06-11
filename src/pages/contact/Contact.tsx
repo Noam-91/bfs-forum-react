@@ -28,9 +28,6 @@ const Contact = () => {
             .max(1000, 'Message must be 1000 characters or less'),
     });
 
-    /** Alert */
-    const {showAlert} = useAlert();
-
     /** Initialize Formik */
     const formik = useFormik({
         initialValues: {
@@ -53,6 +50,8 @@ const Contact = () => {
         },
     });
 
+    /** Alert */
+    const {showAlert} = useAlert();
     useEffect(() => {
         if (status === 'succeeded') {
             showAlert('success', 'Success', 'Message sent successfully!');

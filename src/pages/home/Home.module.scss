@@ -1,0 +1,135 @@
+/* src/pages/Home.module.scss */
+
+.homePageContainer {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.title {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 30px;
+}
+
+.searchBarSection {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 40px;
+  justify-content: center;
+  align-items: center;
+
+  @media (max-width: 600px) {
+    flex-wrap: wrap; // Allow items to wrap on small screens
+    justify-content: space-around; // Distribute items
+  }
+}
+
+.searchInput {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  max-width: 400px; // Keep a max-width for larger screens
+
+  @media (max-width: 600px) {
+    width: 100%; // Take full width on small screens
+    max-width: unset; // Remove max-width constraint
+  }
+}
+
+.searchSelect {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+
+  @media (max-width: 600px) {
+    width: 100%; // Take full width on small screens
+  }
+}
+
+.searchButton {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: background-color 0.2s ease; // Smooth transition
+
+  &:hover {
+    background-color: #0056b3; // Darker blue on hover
+  }
+
+  @media (max-width: 600px) {
+    width: 100%; // Take full width on small screens
+    justify-content: center; // Center content in button
+  }
+}
+
+.featherSearch {
+  /* SVG icon styling if needed, though stroke/fill from currentColor usually suffice */
+}
+
+.loadingMessage,
+.errorMessage {
+  text-align: center;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.loadingMessage {
+  color: #007bff;
+  background-color: #e0f2ff;
+  border: 1px solid #b3d9ff;
+}
+
+.errorMessage {
+  color: #e74c3c;
+  background-color: #fcecec;
+  border: 1px solid #f2a7a7;
+}
+
+.postListSection {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  border-bottom: 2px solid; // Color will be set by specific modifier
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.hotPostsTitle {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.noPostsMessage {
+  text-align: center;
+  color: #777;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+// Basic responsiveness for the layout
+@media (max-width: 768px) {
+  .homePageContainer {
+    margin: 10px auto;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .homePageContainer {
+    padding: 10px;
+  }
+}
