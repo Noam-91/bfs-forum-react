@@ -1,0 +1,207 @@
+@use '../../../assets/css/post/_post.scss' as *;
+
+.container {
+  background-color: $color-white;
+  min-height: calc(100vh - 60px); // Subtract navbar height
+  padding: 0;
+}
+
+// Page header with title and create button
+.pageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-xl 0;
+  margin-bottom: $spacing-lg;
+  border-bottom: $border-width solid $color-border;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: 500;
+  color: $color-text;
+  margin: 0;
+}
+
+// Create post button (prominent)
+.createButton {
+  padding: $spacing-sm $spacing-lg;
+  background-color: $color-primary;
+  color: $color-white;
+  border: none;
+  font-size: $font-size-base;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+// Controls section (filters and sorting)
+.controls {
+  margin-bottom: $spacing-lg;
+}
+
+.filterGroup {
+  display: flex;
+  gap: $spacing-md;
+  align-items: center;
+}
+
+.select {
+  padding: $spacing-sm $spacing-md;
+  border: $border-width solid $color-border;
+  background-color: $color-white;
+  font-size: $font-size-base;
+  color: $color-text;
+  cursor: pointer;
+  min-width: 180px;
+  
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+// Posts list
+.postsList {
+  // Remove default spacing
+}
+
+.postItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: $spacing-lg 0;
+  border-bottom: $border-width solid $color-border;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: $color-bg;
+    margin: 0 (-$spacing-lg);
+    padding-left: $spacing-lg;
+    padding-right: $spacing-lg;
+  }
+  
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.postContent {
+  flex: 1;
+}
+
+.postTitle {
+  font-size: $font-size-lg;
+  font-weight: 500;
+  color: $color-text;
+  margin: 0 0 $spacing-xs 0;
+  
+  // Hover effect on title
+  .postItem:hover & {
+    color: $color-link;
+  }
+}
+
+.postMeta {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  line-height: 1.4;
+}
+
+.postStats {
+  display: flex;
+  align-items: center;
+  margin-left: $spacing-lg;
+}
+
+.viewCount {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  white-space: nowrap;
+}
+
+// Empty state
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl * 3 0;
+  color: $color-text-secondary;
+  
+  p {
+    font-size: $font-size-lg;
+    margin-bottom: $spacing-lg;
+  }
+}
+
+.createButtonEmpty {
+  padding: $spacing-sm $spacing-lg;
+  background-color: $color-primary;
+  color: $color-white;
+  border: none;
+  font-size: $font-size-base;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  
+  &:hover {
+    background-color: darken($color-primary, 10%);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: $spacing-md;
+  }
+  
+  .pageTitle {
+    font-size: 24px;
+  }
+  
+  .createButton {
+    width: 100%;
+  }
+  
+  .filterGroup {
+    flex-direction: column;
+    width: 100%;
+    
+    .select {
+      width: 100%;
+    }
+  }
+  
+  .postItem {
+    flex-direction: column;
+    gap: $spacing-sm;
+    
+    &:hover {
+      margin: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+  
+  .postStats {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageTitle {
+    font-size: 20px;
+  }
+  
+  .postTitle {
+    font-size: $font-size-base;
+  }
+  
+  .postMeta {
+    font-size: $font-size-sm * 0.9;
+  }
+}

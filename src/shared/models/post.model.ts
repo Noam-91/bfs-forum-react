@@ -14,6 +14,7 @@ export interface Post {
   userId: number;
   lastName: string;
   firstName: string;
+  userName?:string;
   status: PostStatus;
   createdAt: string;
   updatedAt: string;

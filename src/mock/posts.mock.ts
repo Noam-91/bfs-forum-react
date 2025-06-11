@@ -8,6 +8,7 @@ export const mockUserPosts: Post[] = [
     userId: 1,
     lastName: 'Doe',
     firstName: 'John',
+    userName: 'John Doe',
     status: PostStatus.PUBLISHED,
     createdAt: '2025-01-15T10:30:00',
     updatedAt: '2025-01-15T14:45:00',
@@ -22,6 +23,7 @@ export const mockUserPosts: Post[] = [
     userId: 1,
     lastName: 'Doe',
     firstName: 'John',
+    userName: 'John Doe',
     status: PostStatus.UNPUBLISHED,
     createdAt: '2025-01-18T09:00:00',
     updatedAt: '2025-01-18T11:00:00',
@@ -36,6 +38,7 @@ export const mockUserPosts: Post[] = [
     userId: 1,
     lastName: 'Doe',
     firstName: 'John',
+    userName: 'John Doe',
     status: PostStatus.HIDDEN,
     createdAt: '2025-01-10T08:00:00',
     updatedAt: '2025-01-11T10:00:00',
@@ -50,11 +53,31 @@ export const mockUserPosts: Post[] = [
     userId: 1,
     lastName: 'Doe',
     firstName: 'John',
+    userName: 'John Doe',
     status: PostStatus.PUBLISHED,
     createdAt: '2025-01-05T14:00:00',
     updatedAt: '2025-01-05T14:00:00',
     viewCount: 567,
     replyCount: 12,
     isArchived: true
+  },
+  {
+    id: '5',
+    title: 'React vs Vue comparison',
+    content: 'Which framework is better...',
+    userId: 2,
+    lastName: 'Smith',
+    firstName: 'Jane',
+    userName: 'Jane Smith',
+    status: PostStatus.PUBLISHED,
+    createdAt: '2025-01-05T14:00:00',
+    updatedAt: '2025-01-05T14:00:00',
+    viewCount: 88,
+    replyCount: 66,
+    isArchived: true
   }
 ];
+
+export const mockPublishedPosts = mockUserPosts.filter(
+  post => post.status === PostStatus.PUBLISHED && !post.isArchived
+);

@@ -1,0 +1,121 @@
+@use '../../../assets/css/post/_post.scss' as *;
+
+.navbar {
+  background-color: $color-white;
+  border-bottom: $border-width solid $color-border;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  
+  // Ensure navbar stays on top
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 $spacing-lg;
+  height: 60px; // Fixed height for navbar
+  
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Logo styling
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: $color-primary;
+  text-decoration: none;
+  
+  // Remove default link styles
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+// Navigation links container
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xl;
+  
+  // Center navigation in the navbar
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+// Individual nav link
+.navLink {
+  color: $color-text-secondary;
+  text-decoration: none;
+  font-size: $font-size-base;
+  padding: $spacing-xs 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+  
+  // Hover effect
+  &:hover {
+    color: $color-primary;
+  }
+  
+  // Active state
+  &.active {
+    color: $color-primary;
+    font-weight: 500;
+    
+    // Simple underline for active state
+    border-bottom: 2px solid $color-primary;
+  }
+}
+
+// User info section
+.userInfo {
+  display: flex;
+  align-items: center;
+}
+
+.userEmail {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .container {
+    padding: 0 $spacing-md;
+  }
+  
+  .navLinks {
+    gap: $spacing-lg;
+    
+    // On mobile, don't center the nav
+    position: static;
+    transform: none;
+  }
+  
+  .userEmail {
+    // Hide email on small screens
+    display: none;
+  }
+  
+  // Shorter labels on mobile
+  .navLink {
+    font-size: $font-size-sm;
+  }
+}
+
+// Very small screens
+@media (max-width: 480px) {
+  .logo {
+    font-size: 18px;
+  }
+  
+  .navLinks {
+    gap: $spacing-md;
+  }
+}
