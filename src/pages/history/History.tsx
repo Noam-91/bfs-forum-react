@@ -90,7 +90,6 @@ const History = () => {
     setSearchParams({ ...filterParams, page: '0', size: String(DEFAULT_SIZE) });
   };
 
-
   return (
     <div className={styles.history}>
       <HistoryFilter onResults={onFilter} />
@@ -99,7 +98,7 @@ const History = () => {
         <div>Title</div><div>Author</div><div>Replies</div><div>Views</div><div>Viewed</div>
       </div>
 
-      {items .map(item => (
+      {/* {items .map(item => (
         <div className={styles.historyRow} key={`${item.postId}-${item.viewedAt}`}>
           <div className={styles.title}>{item.post.title}</div>
           <div>{item.post.firstName} {item.post.lastName}</div>
@@ -107,7 +106,9 @@ const History = () => {
           <div>{item.post.viewCount}</div>
           <div>{formatAgo(item.viewedAt)}</div>
         </div>
-      ))}
+      ))} */}
+
+      <PostList left0={"Title"} left1={"firstName"} left2= {"lastName"} left3 = {"replyCount"} left4={"viewCount"} right= {"viewedAt"} posts={items} />
 
       <div className={styles.pagination}>
         {Array.from({ length: totalPages }).map((_, idx) => (
