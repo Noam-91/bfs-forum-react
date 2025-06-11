@@ -1,53 +1,31 @@
+import {register,verifyEmail} from "./user.thunks.ts";
 import {createSlice} from "@reduxjs/toolkit";
 import type IUser from "../../shared/models/IUser.ts";
-import {checkAuth, login, logout, register} from "./user.thunks.ts";
+
 
 interface IUserState {
     user: IUser | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
     error: string | null;
+
+    verifyStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+    verifyMessage: string | null;
+    verifiedFirstName: string | null;
 }
 const userSlice = createSlice({
     name: "user",
     initialState: {
         user: null,
         status: 'idle',
-        error: null
+        error: null,
+        verifyStatus: 'idle',
+        verifyMessage: null,
+        verifiedFirstName: null
     } as IUserState,
+
     reducers: { },
     extraReducers:(builder)=>{
         builder
-            // login
-            .addCase(login.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(login.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
-                state.status = 'succeeded';
-                state.error = null;
-            })
-            .addCase(login.rejected, (state, action)=>{
-                state.user = null;
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
-            // logout
-            .addCase(logout.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(logout.fulfilled, (state)=>{
-                state.user = null;
-                state.status = 'idle';
-                state.error = null;
-            })
-            .addCase(logout.rejected, (state, action)=>{
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
             //register
             .addCase(register.pending, (state)=>{
                 state.status = 'loading';
@@ -63,27 +41,31 @@ const userSlice = createSlice({
             })
 
             //checkAuth
-            .addCase(checkAuth.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
+            .addCase(verifyEmail.pending, (state) => {
+                state.verifyStatus = 'loading';
+                state.verifyMessage = null;
+                state.verifiedFirstName = null;
             })
-            .addCase(checkAuth.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
-                state.status = 'succeeded';
-                state.error = null;
+            .addCase(verifyEmail.fulfilled, (state, action) => {
+                state.verifyStatus = 'succeeded';
+                state.verifyMessage = action.payload.message;
+                state.verifiedFirstName = action.payload.user.firstName;
             })
-            .addCase(checkAuth.rejected, (state, action)=>{
-                state.user = null;
-                state.status = 'failed';
-                state.error = action.payload as string;
+            .addCase(verifyEmail.rejected, (state, action) => {
+                state.verifyStatus = 'failed';
+                state.verifyMessage = action.payload ?? 'Email verification failed';
             })
     },
-    selectors:{
-        selectIsLoggedIn: (state) => !!state.user,
-        selectUserRole: (state) => state.user?.role,
-    }
 });
 
-export default userSlice.reducer;
-export const {selectIsLoggedIn, selectUserRole} = userSlice.selectors;
 
+import type { RootState } from '../store.ts';
+
+export const selectRegisterStatus = (state: RootState) => state.user.status;
+export const selectRegisterError = (state: RootState) => state.user.error;
+
+export const selectVerifyStatus = (state: RootState) => state.user.verifyStatus;
+export const selectVerifyMessage = (state: RootState) => state.user.verifyMessage;
+export const selectVerifiedFirstName = (state: RootState) => state.user.verifiedFirstName;
+
+export default userSlice.reducer;

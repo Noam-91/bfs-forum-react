@@ -1,0 +1,20 @@
+.filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filters input,
+.filters select {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.jump-input {
+    width: 60px;
+    padding: 6px;
+    margin-left: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
