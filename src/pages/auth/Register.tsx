@@ -22,7 +22,6 @@ const Register = () => {
         lastName: '',
         password: '',
         confirmPassword: '',
-        imgUrl: '',
     };
 
     const validationSchema = Yup.object({
@@ -52,7 +51,6 @@ const Register = () => {
         }
     }, [status, error]);
 
-
     return (
         <div className="register-container">
             <div className="register-card">
@@ -74,12 +72,6 @@ const Register = () => {
                         <Field name="confirmPassword" type="password" placeholder="Confirm Password" className="register-input" />
                         <ErrorMessage name="confirmPassword" component="div" className="error-message" />
 
-                        <Field
-                            name="imgUrl"
-                            type="text"
-                            placeholder="Avatar URL (optional)"
-                            className="register-input"
-                        />
                         <ErrorMessage name="avatar" component="div" className="error-message" />
 
                         <button type="submit" className="register-button">Submit</button>

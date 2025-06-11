@@ -37,11 +37,16 @@
 }
 
 .login-link {
-    display: block;
+    display: inline-block;
     margin-top: 15px;
     font-size: 12px;
-    color: #333;
-    text-decoration: none;
+    color: #007bff;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.login-link:hover {
+    color: #0056b3;
 }
 
 .error-message {

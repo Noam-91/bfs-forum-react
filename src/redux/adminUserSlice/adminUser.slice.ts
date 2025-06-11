@@ -31,7 +31,6 @@ const adminUserSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // 获取所有用户
             .addCase(fetchAllUsers.pending, (state) => {
                 state.fetchStatus = 'loading';
             })
@@ -48,7 +47,6 @@ const adminUserSlice = createSlice({
                 state.error = action.error.message ?? 'Failed to fetch users';
             })
 
-            // 封禁用户
             .addCase(banUser.fulfilled, (state, action: PayloadAction<IUser>) => {
                 const index = state.users.findIndex(user => user.id === action.payload.id);
                 if (index !== -1) {
@@ -56,7 +54,6 @@ const adminUserSlice = createSlice({
                 }
             })
 
-            // 启用用户
             .addCase(activateUser.fulfilled, (state, action: PayloadAction<IUser>) => {
                 const index = state.users.findIndex(user => user.id === action.payload.id);
                 if (index !== -1) {
@@ -68,15 +65,15 @@ const adminUserSlice = createSlice({
 
 export default adminUserSlice.reducer;
 
-// ✅ Selectors
-export const selectUsers = (state: RootState) => state.adminUser.users;
+export const selectUsers = (state: RootState) =>
+    state.adminUser?.users ?? []; // fallback to [] even if undefined
 export const selectUserStatus = (state: RootState) => state.adminUser.fetchStatus;
 export const selectPaginationInfo = createSelector(
     [(state: RootState) => state.adminUser],
     (adminUser) => ({
-        page: adminUser.page,
-        size: adminUser.size,
-        totalPages: adminUser.totalPages,
-        totalElements: adminUser.totalElements,
+        page: adminUser.page ?? 0,
+        size: adminUser.size ?? 10,
+        totalPages: adminUser.totalPages ?? 1,
+        totalElements: adminUser.totalElements ?? 0,
     })
 );

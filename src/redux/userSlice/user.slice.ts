@@ -69,7 +69,6 @@ export const { resetRegisterState, resetVerifyState } = userSlice.actions;
 
 export default userSlice.reducer;
 
-// ✅ Selectors
 import type { RootState } from '../../redux/store';
 
 export const selectRegisterStatus = (state: RootState) => state.user.registerStatus;

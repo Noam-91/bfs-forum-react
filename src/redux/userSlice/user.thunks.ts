@@ -14,7 +14,6 @@ export const register = createAsyncThunk<
         firstName: string;
         lastName: string;
         password: string;
-        imgUrl: string;
     },
     { rejectValue: string }
 >('users/register', async (userData, thunkAPI) => {

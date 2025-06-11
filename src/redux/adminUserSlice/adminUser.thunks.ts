@@ -15,10 +15,16 @@ export const fetchAllUsers = createAsyncThunk<
             const params = new URLSearchParams();
             params.append('page', page.toString());
             params.append('size', size.toString());
-            if (username) params.append('username', username);
-            if (role) params.append('role', role);
 
-            const response = await axios.get(`/users/page?${params.toString()}`);
+            if (username?.trim()) {
+                params.append('username', username.trim());
+            }
+
+            if (role && role !== 'ALL') {
+                params.append('role', role);
+            }
+
+            const response = await axios.get(`http://localhost:8080/users/page?${params.toString()}`);
             return response.data;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
@@ -30,7 +36,7 @@ export const banUser = createAsyncThunk<IUser, string>(
     'adminUser/ban',
     async (userId, thunkAPI) => {
         try {
-            const response = await axios.put(`/users/${userId}/activation`, {
+            const response = await axios.put(`http://localhost:8080/users/${userId}/activation`, {
                 isActive: false,
             });
             return response.data;
@@ -44,7 +50,7 @@ export const activateUser = createAsyncThunk<IUser, string>(
     'adminUser/activate',
     async (userId, thunkAPI) => {
         try {
-            const response = await axios.put(`/users/${userId}/activation`, {
+            const response = await axios.put(`http://localhost:8080/users/${userId}/activation`, {
                 isActive: true,
             });
             return response.data;

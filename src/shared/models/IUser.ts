@@ -8,5 +8,6 @@ export default interface IUser{
     firstName?: string;
     lastName?: string;
     imgUrl?: string;
+    createdAt?: string;
 }
 
