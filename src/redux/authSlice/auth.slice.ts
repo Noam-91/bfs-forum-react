@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type IUser from "../../shared/models/IUser.ts";
 import { checkAuth, login, logout } from "./auth.thunks.ts";
-import type { RootState } from "../store";  // 别忘了引入 RootState 类型
+import type { RootState } from "../store";
 
 interface IUserState {
     user: IUser | null;
@@ -23,8 +23,7 @@ const authSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(login.fulfilled, (state, action) => {
-                state.user = action.payload.user;
+            .addCase(login.fulfilled, (state, ) => {
                 state.status = 'succeeded';
                 state.error = null;
             })

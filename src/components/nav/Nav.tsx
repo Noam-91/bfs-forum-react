@@ -3,15 +3,17 @@ import ReactIcon from '../../assets/icons/react.svg';
 import styles from './Nav.module.scss';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import {logout} from "../../redux/authSlice/auth.thunks.ts";
-
+import { useNavigate } from 'react-router-dom';
 
 const Nav = () => {
     const {user} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const handleLogout = () =>{
         dispatch(logout());
         console.log("Log out success.")
+        navigate('/login', { replace: true });
     }
 
     return (

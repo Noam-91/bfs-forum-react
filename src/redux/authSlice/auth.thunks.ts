@@ -10,10 +10,10 @@ export const login = createAsyncThunk(
             const response = await axios.post(`http://localhost:8080/auth/login`, loginForm, {
                 withCredentials: true
             });
-            console.log("Login API response: ", response.data);
-            const user: IUser = response.data.user;
-            sessionStorage.setItem('role', user.role);
-            return { user };
+            // console.log("Login API response: ", response.data);
+            // const user: IUser = response.data.user;
+            // sessionStorage.setItem('role', user.role);
+            return  response.data ;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }

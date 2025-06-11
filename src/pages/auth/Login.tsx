@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import {checkAuth, login} from '../../redux/authSlice/auth.thunks.ts';
-import { selectIsLoggedIn } from '../../redux/authSlice/auth.slice';
+import { selectIsLoggedIn , selectUserRole} from '../../redux/authSlice/auth.slice';
 import { useAlert } from '../../components/alert/AlertHook';
 import {useEffect} from "react";
 import './Login.css';
@@ -13,6 +13,7 @@ const Login = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const isLoggedIn = useAppSelector(selectIsLoggedIn);
+    const userRole = useAppSelector(selectUserRole);
 
     const initialValues = {
         username: '',
@@ -28,18 +29,28 @@ const Login = () => {
             .required('Password is required'),
     });
 
-    const handleSubmit = (values: typeof initialValues) => {
-        dispatch(login(values));
-        dispatch(checkAuth());
-    };
+    const handleSubmit = async (values: typeof initialValues) => {
+        const resultAction = await dispatch(login(values));
 
+        if (login.fulfilled.match(resultAction)) {
+            await dispatch(checkAuth()); // 等 login 成功后才调用
+        } else {
+            showAlert('error', 'Login Failed', 'Invalid username or password');
+        }
+    };
     useEffect(() => {
-        console.log('isLoggedIn:', isLoggedIn);
+        console.log('isLoggedIn:', isLoggedIn, 'role:', userRole);
         if (isLoggedIn) {
             showAlert('success', 'Login', 'Login successful!');
-            navigate('/admin/users');
+            if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
+                navigate('/admin/users');
+            } else if (userRole === 'VISITOR' || userRole === 'UNVERIFIED' || userRole === 'USER') {
+                navigate('/user/home');
+            } else {
+                navigate('/unknown-role'); // this not implemented yet
+            }
         }
-    }, [isLoggedIn, navigate, showAlert]);
+    }, [isLoggedIn, userRole, navigate, showAlert]);
 
     return (
         <div className="login-container">
