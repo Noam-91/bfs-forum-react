@@ -1,0 +1,90 @@
+@use "../../assets/css/variables" as *;
+.postItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: $spacing-lg 0;
+  border-bottom: 1px solid $border-color;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $background-color;
+    margin: 0 (-$spacing-lg);
+    padding-left: $spacing-lg;
+    padding-right: $spacing-lg;
+    transform: scale(1.01);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); // hover:shadow-lg
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.postContent {
+  flex: 1;
+}
+
+.postTitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: $text-color;
+  margin: 0 0 $spacing-xs 0;
+
+  // Hover effect on title
+  .postItem:hover & {
+    color: $primary-color
+  }
+}
+
+.postMeta {
+  font-size: 1rem;
+  color: $secondary-color;
+  line-height: 1.4;
+  span{
+    margin: 0 8px;
+  }
+  span:first-child{
+    margin-left: 0
+  }
+}
+
+.postStats {
+  display: flex;
+  align-items: center;
+  margin-left: $spacing-lg;
+}
+
+.viewSvg{
+  width: .75rem;
+  height: .75rem;
+  color: $primary-color;
+  margin: 0 2px;
+}
+
+.chatSvg{
+  width: .75rem;
+  height: .75rem;
+  color: $success-color;
+  margin: 0 2px;
+}
+
+.viewCount {
+  font-size: 1rem;
+  color: $secondary-color;
+  white-space: nowrap;
+  margin-right: 8px;
+}
+
+// Empty state
+.emptyState {
+  text-align: center;
+  padding: $spacing-xl * 3 0;
+  color: $secondary-color;
+
+  p {
+    font-size: 1.5rem;
+    margin-bottom: $spacing-lg;
+  }
+}
