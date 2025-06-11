@@ -12,9 +12,9 @@ createRoot(document.getElementById('root')!).render(
           <AlertProvider>
               <Routes>
                   {/*pages without Nav component*/}
-                  <Route path="/" element={<App />} >
-                    <Route path="posts/create" element={<PostFormPage/>}/>
-                    <Route path="posts/edit/:postId" element={<PostFormPage/>}/>
+                  <Route path="/*" element={<App />} >
+                    <Route path="posts/create" element={<PostFormPage mode="create"/>}/>
+                    <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/>
                   </Route>
               </Routes>
           </AlertProvider>

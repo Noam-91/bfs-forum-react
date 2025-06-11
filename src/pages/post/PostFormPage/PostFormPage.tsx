@@ -191,7 +191,6 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
   console.log('Rendering PostFormPage');
   return (
     <div className={styles.container}>
-      <div style={{ border: '1px solid red' }}>Form loaded</div>
       <div className={styles.header}>
         <h1 className={styles.title}>{pageTitle}</h1>
       </div>
