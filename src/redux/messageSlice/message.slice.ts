@@ -12,7 +12,7 @@ const initialState: IMessageState = {
 const messageSlice = createSlice({
     name: 'message',
     initialState,
-    reducers: { },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             // send message

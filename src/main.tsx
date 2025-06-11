@@ -8,6 +8,7 @@ import AuthGuard from "./guards/AuthGuard.tsx";
 import Contact from "./pages/contact/Contact.tsx";
 import store from "./redux/store.ts";
 import {Provider} from "react-redux";
+import Home from "./pages/home/Home.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,10 +18,11 @@ createRoot(document.getElementById('root')!).render(
                   <Routes>
                       {/*pages without Nav component*/}
                       <Route path={'/contact'} element={<Contact />}/>
-                      <Route path="/" element={<App />} >
+                      <Route path="/" element={<App />}>
                           {/*pages with Nav component*/}
                           <Route element={<AuthGuard/>}>
                               {/*guarded pages*/}
+                              <Route index element={<Home />} />
                           </Route>
                           {/*public pages*/}
 

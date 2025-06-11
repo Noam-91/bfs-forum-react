@@ -7,3 +7,9 @@ export default interface IUser{
 }
 
 type Role = "VISITOR" | "UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
+
+export interface ILoginFormData {
+    username:string,
+    password:string
+}
+
