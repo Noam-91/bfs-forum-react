@@ -11,7 +11,7 @@ const AuthGuard = () => {
         dispatch(checkAuth());
     }, [dispatch]);
 
-    return !!user? <Outlet /> : <Navigate to={'/'} />;
+    return user? <Outlet /> : <Navigate to={'/'} />;
 };
 
 export default AuthGuard;

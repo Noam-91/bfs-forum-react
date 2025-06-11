@@ -6,7 +6,7 @@ import {logout} from "../../redux/authSlice/auth.thunks.ts";
 
 
 const Nav = () => {
-    const {user} = useAppSelector((state: any) => state.auth);
+    const {user} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
 
     const handleLogout = () =>{
