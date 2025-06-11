@@ -7,10 +7,7 @@ export const sendMessage = createAsyncThunk(
     'messages/send',
     async (contactForm: ContactFormData, thunkAPI) => {
         try {
-            await axios.post(`${process.env.BACKEND_API}/messages`, {
-                method: 'POST',
-                body: contactForm,
-            });
+            await axios.post(`http://localhost:8080/messages`, contactForm);
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }

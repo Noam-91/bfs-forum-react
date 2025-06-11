@@ -21,7 +21,7 @@ const Contact = () => {
             .trim()
             .required('Subject is required')
             .max(100, 'Subject must be 100 characters or less'),
-        message: Yup.string()
+        content: Yup.string()
             .trim()
             .required('Message is required')
             .min(10, 'Message must be at least 10 characters')
@@ -36,7 +36,7 @@ const Contact = () => {
         initialValues: {
             email: '',
             subject: '',
-            message: '',
+            content: '',
         },
         validationSchema: validationSchema,
         onSubmit: async (values: ContactFormData, { setSubmitting, resetForm }) => {
@@ -112,17 +112,17 @@ const Contact = () => {
                 <div className={styles.textFieldWrapper}>
                     <TextField
                         fullWidth
-                        id="message"
-                        name="message"
+                        id="content"
+                        name="content"
                         label="Message"
                         multiline
                         rows={6}
                         variant="outlined"
-                        value={formik.values.message}
+                        value={formik.values.content}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.message && Boolean(formik.errors.message)}
-                        helperText={formik.touched.message && formik.errors.message}
+                        error={formik.touched.content && Boolean(formik.errors.content)}
+                        helperText={formik.touched.content && formik.errors.content}
                     />
                 </div>
 
