@@ -214,6 +214,20 @@
   }
 }
 
+.dangerButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.dangerButton:hover {
+  background-color: #c82333;
+}
+
 .message {
   padding: $spacing-sm;
   border-radius: $border-radius;

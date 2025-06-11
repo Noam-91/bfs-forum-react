@@ -25,19 +25,40 @@ const UserHomePage: React.FC = () => {
 
   // test connection
   useEffect(() => {
+    // for test: fixed the USER
     localStorage.setItem('userId', 'test-user-id');
     localStorage.setItem('userRole', 'USER');
-    testBackendConnection();
-  });
+    // testBackendConnection();
+    loadPosts(0);
+    // const fetchPosts = async () => {
+    //   try {
+    //     const response = await postService.getPublishedPosts(0, 10, 'createdAt', 'desc');
+    //     const fetchedPosts = response.content;
+    //     setOriginalPosts(fetchedPosts);
+    //     setPosts(fetchedPosts);
+    //   } catch (error) {
+    //     console.error('Failed to load posts:', error);
+    //   }
+    // };
+    // fetchPosts();
+  }, []);
   
   // State
-  const [posts, setPosts] = useState<Post[]>(mockPublishedPosts);
+//   const [posts, setPosts] = useState<Post[]>(mockPublishedPosts);
+
+  // init response data
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [originalPosts, setOriginalPosts] = useState<Post[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [filterByAuthor, setFilterByAuthor] = useState<FilterOption>('all');
+  // pagination
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
   
   // Get unique authors for filter dropdown
   const uniqueAuthors = Array.from(
-    new Set(mockPublishedPosts.map(post => post.userName))
+    // new Set(mockPublishedPosts.map(post => post.userName))
+    new Set(originalPosts.map(post => post.userName))
   );
   
   // Handle create post
@@ -56,11 +77,29 @@ const UserHomePage: React.FC = () => {
     setFilterByAuthor(e.target.value);
     filterPosts(e.target.value);
   };
+
+  const loadPosts = async (pageToLoad = 0) => {
+        try {
+            const response = await postService.getPublishedPosts(pageToLoad, 3, 'createdAt', 'desc');
+            const newPosts = response.content;
+
+            // const allPosts = [...(pageToLoad === 0 ? [] : originalPosts), ...newPosts];
+            // setOriginalPosts(allPosts);
+            // setPosts(allPosts);
+            setOriginalPosts(newPosts);
+            setPosts(newPosts);
+            setPage(pageToLoad);
+            setHasMore(!response.last);
+        } catch (error){
+            console.log('Failed to load posts: ', error);
+        }
+    };
   
   // Sort posts
-  const sortPosts = (sortOption: SortOption) => {
-    let sorted = [...posts];
-    
+//   const sortPosts = (sortOption: SortOption) => {
+//     let sorted = [...posts];
+  const sortPosts = (sortOption: SortOption, basePosts: Post[] = posts) => {
+    let sorted = [...basePosts];
     if (sortOption === 'latest') {
       sorted.sort((a, b) => 
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
@@ -74,16 +113,24 @@ const UserHomePage: React.FC = () => {
   
   // Filter posts
   const filterPosts = (author: string) => {
-    if (author === 'all') {
-      setPosts(mockPublishedPosts);
-    } else {
-      const filtered = mockPublishedPosts.filter(
-        post => post.userName === author
-      );
-      setPosts(filtered);
-    }
+    // if (author === 'all') {
+    //   setPosts(mockPublishedPosts);
+    // } else {
+    //   const filtered = mockPublishedPosts.filter(
+    //     post => post.userName === author
+    //   );
+    //   setPosts(filtered);
+    // }
     // Reapply current sort
-    sortPosts(sortBy);
+    
+    let filtered = [...originalPosts];
+    if (author !== 'all') {
+      filtered = filtered.filter(post => post.userName === author);
+    }
+    setPosts(filtered);
+    sortPosts(sortBy, filtered);
+
+    // sortPosts(sortBy);
   };
   
   // Format date
@@ -134,9 +181,9 @@ const UserHomePage: React.FC = () => {
             onChange={handleFilterChange}
           >
             <option value="all">Filter by: All Authors</option>
-            {uniqueAuthors.map(author => (
-              <option key={author} value={author}>
-                Filter by: {author}
+            {uniqueAuthors.map((author, index) => (
+              <option key={`${author}-${index}`} value={author}>
+                Filter by: {author || 'Unknown'}
               </option>
             ))}
           </select>
@@ -175,6 +222,18 @@ const UserHomePage: React.FC = () => {
           ))
         )}
       </div>
+    
+      {hasMore && (
+        <div className={styles.loadMoreWrapper}>
+            <button
+                className={styles.loadMoreButton}
+                onClick={() => loadPosts(page + 1)}
+            >
+                Next Page
+            </button>
+        </div>
+        )}
+
     </div>
   );
 };

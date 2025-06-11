@@ -3,6 +3,7 @@ import {useFormik} from 'formik';
 import { PostStatus } from '../../../shared/models/post.model'; 
 import styles from './PostFormPage.module.scss'; 
 import { postFormValidationSchema, PostCreateFormValues, Attachment } from './postFormValidationSchema';
+import { uploadFileToS3 } from '../../../components/post/service/s3Upload';
 
 interface PostFormPageProps {
   mode: 'create' | 'edit';
@@ -21,6 +22,7 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
   const pageTitle = isEditMode ? 'Edit Post' : 'Create New Post';
   const submitButtonText = isEditMode ? 'Save Changes' : 'Publish Post';
   const draftButtonText = 'Save as Draft';
+  const deleteButtonText = 'Delete Post';
 
   
   // Get file icon based on type
@@ -126,7 +128,7 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
 
 
   // fileSelect: from folder or drag
-  const handleFileSelect = useCallback((files: FileList | null) => {
+  const handleFileSelect = useCallback(async (files: FileList | null) => {
     if (!files) return;
 
     const currentAttachments: Attachment[] = formik.values.attachments || [];
@@ -150,13 +152,19 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
         break;
       }
 
-      newAttachments.push({
-        id: `${file.name}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, // Unique ID
-        file: file, // store real File object
-        name: file.name,
-        size: file.size,
-        type: file.type,
-      });
+      try{
+        const fileUrl = await uploadFileToS3(file);
+        newAttachments.push({
+          id: `${file.name}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, // Unique ID
+          file: file, // store real File object
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          url: fileUrl,
+        });
+      } catch (err) {
+        setMessage('Failed to upload ${file.name}');
+      }
     }
 
     formik.setFieldValue('attachments', [...currentAttachments, ...newAttachments]);
@@ -185,7 +193,6 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
     const updatedAttachments = (formik.values.attachments || []).filter(att => att.id !== id);
     formik.setFieldValue('attachments', updatedAttachments);
   },[formik]);
-
 
   // formik, yup
   console.log('Rendering PostFormPage');
@@ -294,6 +301,23 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
 
         {/* Action buttons */}
         <div className={styles.formActions}>
+          {isEditMode && (
+            <button
+              type="button"
+              className={styles.dangerButton}
+              onClick={() => {
+                if (confirm('Are you sure you want to delete this post?')) {
+                  console.log('Deleting post:', postId);
+                  // In practice, call delete API here
+                  setMessage('Post deleted successfully!');
+                }
+              }}
+              disabled={formik.isSubmitting}
+            >
+              {deleteButtonText}
+            </button>
+          )}
+
           <button
             type="button"
             className={styles.secondaryButton}

@@ -137,6 +137,26 @@
     margin-bottom: $spacing-lg;
   }
 }
+// loading
+.loadMoreWrapper {
+  text-align: center;
+  margin: $spacing-lg 0;
+}
+
+.loadMoreButton {
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-base;
+  font-weight: 500;
+  background-color: $color-primary;
+  color: $color-white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: color.adjust($color-primary, $lightness: 10%);
+  }
+}
 
 .createButtonEmpty {
   padding: $spacing-sm $spacing-lg;
