@@ -22,8 +22,7 @@ const authSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(login.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
+            .addCase(login.fulfilled, (state)=>{
                 state.status = 'succeeded';
                 state.error = null;
             })
@@ -63,13 +62,8 @@ const authSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.payload as string;
             })
-    },
-    selectors:{
-        selectIsLoggedIn: (state) => !!state.user,
-        selectUserRole: (state) => state.user?.role,
     }
 });
 
 export default authSlice.reducer;
-export const {selectIsLoggedIn, selectUserRole} = authSlice.selectors;
 
