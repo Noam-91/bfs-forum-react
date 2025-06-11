@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import type IUser from "../../shared/models/IUser.ts";
-import {checkAuth, login, logout, register} from "./user.thunks.ts";
+import {checkAuth, login, logout} from "./auth.thunks.ts";
 
 interface IUserState {
     user: IUser | null;
@@ -8,8 +8,8 @@ interface IUserState {
     error: string | null;
     role: "admin"|"user"|null;
 }
-const userSlice = createSlice({
-    name: "user",
+const authSlice = createSlice({
+    name: "auth",
     initialState: {
         user: null,
         status: 'idle',
@@ -24,8 +24,7 @@ const userSlice = createSlice({
                 state.status = 'loading';
                 state.error = null;
             })
-            .addCase(login.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
+            .addCase(login.fulfilled, (state)=>{
                 state.status = 'succeeded';
                 state.error = null;
             })
@@ -50,20 +49,6 @@ const userSlice = createSlice({
                 state.error = action.payload as string;
             })
 
-            //register
-            .addCase(register.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(register.fulfilled, (state)=>{
-                state.status = 'succeeded';
-                state.error = null;
-            })
-            .addCase(register.rejected, (state, action)=>{
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
             //checkAuth
             .addCase(checkAuth.pending, (state)=>{
                 state.status = 'loading';
@@ -79,13 +64,8 @@ const userSlice = createSlice({
                 state.status = 'failed';
                 state.error = action.payload as string;
             })
-    },
-    selectors:{
-        selectIsLoggedIn: (state) => !!state.user,
-        selectUserRole: (state) => state.user?.role,
     }
 });
 
-export default userSlice.reducer;
-export const {selectIsLoggedIn, selectUserRole} = userSlice.selectors;
+export default authSlice.reducer;
 

@@ -1,11 +1,17 @@
 import {configureStore} from "@reduxjs/toolkit";
-import userReducer from './userSlice/user.slice';
+// import userReducer from './userSlice/user.slice';
 import postsReducer from "./postsSlice/posts.slice";
+import authReducer from './authSlice/auth.slice.ts';
+import messageReducer from './messageSlice/message.slice.ts';
+import postReducer from './postSlice/post.slice.ts';
 
 const store = configureStore({
     reducer:{
-        user: userReducer,
+        // user: userReducer,
         posts: postsReducer,
+        auth: authReducer,
+        message: messageReducer,
+        post: postReducer,
     },
     devTools: true,
     middleware: (getDefaultMiddleware)=>getDefaultMiddleware()
