@@ -9,6 +9,7 @@ type FilterTab = 'all' | 'published' | 'drafts' | 'hidden' | 'archived';
 const PostListPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
   
+  // each status needs to send a request to backend - to be implemented
   // Filter posts based on active tab
   const getFilteredPosts = (): Post[] => {
     switch (activeTab) {
