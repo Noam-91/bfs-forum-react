@@ -1,10 +1,12 @@
 // History.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import styles from './History.module.scss';
 import HistoryFilter from './HistoryFilter';
 import { fakeHistory } from '../../mock/history';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { getQueriedHistory } from '../../redux/historySlice/hisotry.thunks';
 
 
 interface HistoryItem {
@@ -43,6 +45,8 @@ const formatAgo = (iso: string): string => {
 };
 
 const History = () => {
+const dispatch = useAppDispatch();
+const hisotry = useAppSelector(state =>state.history);
   const DEFAULT_PAGE = 0;
   const DEFAULT_SIZE = 3;
 
@@ -67,6 +71,8 @@ const History = () => {
       ...(startDate && { startDate: startDate }),
       ...(endDate && { endDate }),
     };
+
+    // dispatch(getQueriedHistory(params));
 
     axios.get('/history/search', {
       headers: { 'X-User-Id': '…' },
@@ -98,7 +104,7 @@ const History = () => {
         <div>Title</div><div>Author</div><div>Replies</div><div>Views</div><div>Viewed</div>
       </div>
 
-      {/* {items .map(item => (
+      {items .map(item => (
         <div className={styles.historyRow} key={`${item.postId}-${item.viewedAt}`}>
           <div className={styles.title}>{item.post.title}</div>
           <div>{item.post.firstName} {item.post.lastName}</div>
@@ -106,9 +112,9 @@ const History = () => {
           <div>{item.post.viewCount}</div>
           <div>{formatAgo(item.viewedAt)}</div>
         </div>
-      ))} */}
-
-      <PostList left0={"Title"} left1={"firstName"} left2= {"lastName"} left3 = {"replyCount"} left4={"viewCount"} right= {"viewedAt"} posts={items} />
+      ))}
+{/* 
+      <PostList left0={"Title"} left1={"firstName"} left2= {"lastName"} left3 = {"replyCount"} left4={"viewCount"} right= {"viewedAt"} posts={items} /> */}
 
       <div className={styles.pagination}>
         {Array.from({ length: totalPages }).map((_, idx) => (
