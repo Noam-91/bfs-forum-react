@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {useFormik} from 'formik';
-import { Post, PostStatus } from '../../../shared/models/post.model'; 
+import { PostStatus } from '../../../shared/models/post.model'; 
 import styles from './PostFormPage.module.scss'; 
 import { postFormValidationSchema, PostCreateFormValues, Attachment } from './postFormValidationSchema';
 
@@ -188,8 +188,10 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
 
 
   // formik, yup
+  console.log('Rendering PostFormPage');
   return (
     <div className={styles.container}>
+      <div style={{ border: '1px solid red' }}>Form loaded</div>
       <div className={styles.header}>
         <h1 className={styles.title}>{pageTitle}</h1>
       </div>

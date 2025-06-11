@@ -6,7 +6,7 @@ export interface Attachment {
   file: File; // The actual File object
   name: string;
   size: number;
-  type: string; // MIME type, e.g., 'image/jpeg', 'application/pdf'
+  type: string; // MIME type, e.g., ' /jpeg', 'application/pdf'
   url?: string; // Optional URL if uploaded to a temporary location
 }
 
