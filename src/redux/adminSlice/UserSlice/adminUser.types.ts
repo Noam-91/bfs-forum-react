@@ -1,4 +1,4 @@
-import type IUser from '../../shared/models/IUser';
+import type IUser from '../../../shared/models/IUser.ts';
 
 export interface PaginatedUserResponse {
     content: IUser[];

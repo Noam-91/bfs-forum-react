@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { RootState } from '../../redux/store';
-import type IUser from '../../shared/models/IUser';
-import { fetchAllUsers, banUser, activateUser } from './adminUser.thunks';
+import type { RootState } from '../../store.ts';
+import type IUser from '../../../shared/models/IUser.ts';
+import { fetchAllUsers, banUser, activateUser } from './adminUser.thunks.ts';
 import { createSelector } from '@reduxjs/toolkit';
 
 interface AdminUserState {
@@ -48,17 +48,15 @@ const adminUserSlice = createSlice({
             })
 
             .addCase(banUser.fulfilled, (state, action: PayloadAction<IUser>) => {
-                const index = state.users.findIndex(user => user.id === action.payload.id);
-                if (index !== -1) {
-                    state.users[index] = action.payload;
-                }
+                state.users = state.users.map(user =>
+                    user.id === action.payload.id ? action.payload : user
+                );
             })
 
             .addCase(activateUser.fulfilled, (state, action: PayloadAction<IUser>) => {
-                const index = state.users.findIndex(user => user.id === action.payload.id);
-                if (index !== -1) {
-                    state.users[index] = action.payload;
-                }
+                state.users = state.users.map(user =>
+                    user.id === action.payload.id ? action.payload : user
+                );
             });
     },
 });

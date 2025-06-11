@@ -2,7 +2,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { login } from '../../redux/authSlice/auth.thunks.ts';
+import {checkAuth, login} from '../../redux/authSlice/auth.thunks.ts';
 import { selectIsLoggedIn } from '../../redux/authSlice/auth.slice';
 import { useAlert } from '../../components/alert/AlertHook';
 import {useEffect} from "react";
@@ -30,9 +30,11 @@ const Login = () => {
 
     const handleSubmit = (values: typeof initialValues) => {
         dispatch(login(values));
+        dispatch(checkAuth());
     };
 
     useEffect(() => {
+        console.log('isLoggedIn:', isLoggedIn);
         if (isLoggedIn) {
             showAlert('success', 'Login', 'Login successful!');
             navigate('/admin/users');

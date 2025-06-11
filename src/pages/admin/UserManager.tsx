@@ -4,12 +4,12 @@ import {
     fetchAllUsers,
     banUser,
     activateUser
-} from '../../redux/adminUserSlice/adminUser.thunks';
+} from '../../redux/adminSlice/UserSlice/adminUser.thunks.ts';
 import {
     selectUsers,
     selectUserStatus,
     selectPaginationInfo
-} from '../../redux/adminUserSlice/adminUser.slice';
+} from '../../redux/adminSlice/UserSlice/adminUser.slice.ts';
 import type IUser from '../../shared/models/IUser';
 import './UserManager.css';
 
@@ -48,20 +48,23 @@ const UserManager = () => {
         }
     };
 
-    const handleToggleStatus = (user: IUser) => {
+    const handleToggleStatus = async (user: IUser) => {
         if (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN') {
             alert('Admins cannot be banned.');
             return;
         }
+
         if (user.isActive) {
-            dispatch(banUser(user.id));
+            await dispatch(banUser(user.id));
         } else {
-            dispatch(activateUser(user.id));
+            await dispatch(activateUser(user.id));
         }
+
+        loadUsers(page);
     };
 
     const handleSearch = () => {
-        loadUsers(0); // 重置到第一页
+        loadUsers(0);
     };
 
     const handleJump = () => {

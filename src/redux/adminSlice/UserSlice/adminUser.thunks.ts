@@ -1,8 +1,8 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type IUser from '../../shared/models/IUser.ts';
-import type { PaginatedUserResponse } from './adminUser.types';
-import { handleThunkAxiosError } from '../../shared/utils/thunkErrorHandlers.ts';
+import type IUser from '../../../shared/models/IUser.ts';
+import type { PaginatedUserResponse } from './adminUser.types.ts';
+import { handleThunkAxiosError } from '../../../shared/utils/thunkErrorHandlers.ts';
 
 
 export const fetchAllUsers = createAsyncThunk<
