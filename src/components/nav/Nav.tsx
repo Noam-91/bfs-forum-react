@@ -1,22 +1,26 @@
 import {Link, NavLink} from 'react-router-dom';
 import styles from './Nav.module.scss';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
-import {logout} from "../../redux/authSlice/auth.thunks.ts";
+import {checkAuth, logout} from "../../redux/authSlice/auth.thunks.ts";
 import {Tooltip} from "@mui/material";
 import LogoutIcon from '../../assets/icons/logout.svg';
 import HomeIcon from '../../assets/icons/home.svg';
 
 import { useNavigate } from 'react-router-dom';
+import {useEffect} from "react";
 
 
 const Nav = () => {
-    const {user} = useAppSelector((state) => state.auth);
+    const {user, status} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        dispatch(checkAuth())
+    }, [dispatch]);
+
     const handleLogout = () =>{
         dispatch(logout());
-        console.log("Log out success.")
         navigate('/login', { replace: true });
     }
 
@@ -47,10 +51,15 @@ const Nav = () => {
             >
                 ☰
             </button>
-
             <ul className={styles.navDropdown}>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/posts">Posts</Link></li>
+                {status === 'succeeded' && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+                    <>
+                        <li><Link to="/admin/users">User Management</Link></li>
+                        <li><Link to="/admin/messages">Message Management</Link></li>
+                    </>
+                )}
             </ul>
         </div>
     </nav>

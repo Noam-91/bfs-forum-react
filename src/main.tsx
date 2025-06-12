@@ -9,7 +9,8 @@ import Login from './pages/auth/Login.tsx';
 import Register from './pages/auth/Register.tsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.ts';
-import UserManager from './pages/admin/UserManager.tsx';
+import UserManager from './pages/admin/UserManagement.tsx';
+import MessageManager from './pages/admin/MessageManagement.tsx';
 import Home from "./pages/home/Home.tsx";
 import Contact from "./pages/contact/Contact.tsx";
 
@@ -22,10 +23,12 @@ createRoot(document.getElementById('root')!).render(
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/contact" element={<Contact />} />
+
                         <Route path="/" element={<App />}>
                             <Route element={<AuthGuard />}>
                                 <Route index element={<Home />}/>
                                 <Route path="admin/users" element={<UserManager />} />
+                                <Route path="admin/messages" element={<MessageManager />} />
 
                             </Route>
                         </Route>

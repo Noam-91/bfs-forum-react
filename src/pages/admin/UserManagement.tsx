@@ -3,12 +3,12 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 import type IUser from '../../shared/models/IUser';
 import './UserManagement.css';
-import Nav from '../../components/nav/Nav';
 import { activateUser, banUser, getAllUsers } from '../../redux/userSlice/user.thunks';
 
 const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
 
 const UserManagement = () => {
+
     const dispatch = useAppDispatch();
     const { userPage, status } = useAppSelector(state => state.user);
 
@@ -60,7 +60,6 @@ const UserManagement = () => {
 
     return (
         <>
-            <Nav />
             <div className="user-manager-container">
                 <div className="user-manager-card">
                     <h2>User Management</h2>

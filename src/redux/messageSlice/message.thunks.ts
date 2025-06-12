@@ -41,7 +41,7 @@ export const getMessage = createAsyncThunk(
 
 export const solvedMessage = createAsyncThunk(
     'messages/solve',
-    async (id: number, thunkAPI) => {
+    async (id: string, thunkAPI) => {
         try {
             await axios.patch(`${import.meta.env.VITE_BACKEND_API}/messages/${id}`, null, {withCredentials:true});
         } catch (error) {

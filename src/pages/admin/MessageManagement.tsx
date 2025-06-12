@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../redux/hooks';
+import {useAppDispatch, useAppSelector} from '../../redux/hooks';
 import { getAllMessages, solvedMessage } from '../../redux/messageSlice/message.thunks.ts';
 import type { IMessage } from '../../shared/models/IMessage';
 import { unwrapResult } from '@reduxjs/toolkit';
 import './MessageManagement.css';
-import Nav from "../../components/nav/Nav.tsx";
+
 
 const MessageManagement = () => {
+    const {user } = useAppSelector(state => state.auth);
+    console.log(user);
     const dispatch = useAppDispatch();
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [searchTerm, setSearchTerm] = useState('');
@@ -52,14 +54,13 @@ const MessageManagement = () => {
     const totalPages = Math.ceil(filtered.length / itemsPerPage);
 
     const handleSolve = async (id: string) => {
-        await dispatch(solvedMessage(Number(id)));
+        await dispatch(solvedMessage(id));
         const result = await dispatch(getAllMessages());
         if (result.payload) setMessages(result.payload);
     };
 
     return (
         <>
-            <Nav />
             <div className="msg-wrapper">
                 <h2 className="msg-header">Message Management</h2>
 

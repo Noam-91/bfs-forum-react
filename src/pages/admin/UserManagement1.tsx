@@ -4,21 +4,22 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import type IUser from '../../shared/models/IUser';
 import './UserManagement.css';
 import Nav from '../../components/nav/Nav';
-import { activateUser, banUser, getAllUsers } from '../../redux/userSlice/user.thunks';
+import {activateUser, banUser, getAllUsers} from "../../redux/userSlice/user.thunks.ts";
 
 const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
 
-const UserManagement = () => {
+const UserManager = () => {
+
     const dispatch = useAppDispatch();
-    const { userPage, status } = useAppSelector(state => state.user);
+    const {userPage: users, status} = useAppSelector(state=>state.user);
+    console.log('Fetched users:', users);
+    const {number:page, totalPages} = users!;
 
     const [pageSize] = useState(3);
     const [usernameFilter, setUsernameFilter] = useState('');
     const [roleFilter, setRoleFilter] = useState('ALL');
     const [jumpToPage, setJumpToPage] = useState('');
 
-    const page = userPage?.number || 0;
-    const totalPages = userPage?.totalPages || 0;
 
     const loadUsers = (targetPage = 0) => {
         dispatch(
@@ -26,14 +27,14 @@ const UserManagement = () => {
                 page: targetPage,
                 size: pageSize,
                 username: usernameFilter || undefined,
-                role: roleFilter !== 'ALL' ? roleFilter : undefined,
+                role: roleFilter !== 'ALL' ? roleFilter : undefined
             })
         );
     };
 
     useEffect(() => {
         loadUsers(0);
-    }, [dispatch, pageSize]);
+    }, []);
 
     const handlePageChange = (newPage: number) => {
         if (newPage >= 0 && newPage < totalPages) {
@@ -47,11 +48,18 @@ const UserManagement = () => {
             return;
         }
 
-        await dispatch(user.isActive ? banUser(user.id) : activateUser(user.id));
+        if (user.isActive) {
+            await dispatch(banUser(user.id));
+        } else {
+            await dispatch(activateUser(user.id));
+        }
+
         loadUsers(page);
     };
 
-    const handleSearch = () => loadUsers(0);
+    const handleSearch = () => {
+        loadUsers(0);
+    };
 
     const handleJump = () => {
         const target = parseInt(jumpToPage);
@@ -85,7 +93,7 @@ const UserManagement = () => {
                         <button onClick={handleSearch}>Search</button>
                     </div>
 
-                    {status === 'loading' || !userPage ? (
+                    {status === 'loading' ? (
                         <p>Loading users...</p>
                     ) : (
                         <>
@@ -101,8 +109,8 @@ const UserManagement = () => {
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {userPage.content.length > 0 ? (
-                                    userPage.content.map((user) => (
+                                {Array.isArray(users) && users.length > 0 ? (
+                                    users.map((user) => (
                                         <tr key={user.id}>
                                             <td>{user.id}</td>
                                             <td>{`${user.firstName ?? ''} ${user.lastName ?? ''}`}</td>
@@ -122,7 +130,7 @@ const UserManagement = () => {
                                 ) : (
                                     <tr>
                                         <td colSpan={6} className="empty-state">
-                                            No users found.
+                                            {status === 'succeeded' ? 'No users found.' : 'Loading or failed...'}
                                         </td>
                                     </tr>
                                 )}
@@ -138,8 +146,8 @@ const UserManagement = () => {
                                     Previous
                                 </button>
                                 <span className="page-info">
-                                    Page {page + 1} of {totalPages}
-                                </span>
+              Page {page + 1} of {totalPages}
+            </span>
                                 <button
                                     onClick={() => handlePageChange(page + 1)}
                                     disabled={page + 1 >= totalPages}
@@ -163,7 +171,8 @@ const UserManagement = () => {
                 </div>
             </div>
         </>
-    );
-};
 
-export default UserManagement;
+    );
+}
+
+export default UserManager;
