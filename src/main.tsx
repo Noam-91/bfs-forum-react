@@ -22,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path={'/contact'} element={<Contact />}/>
             <Route path="/" element={<App />}>
               <Route element={<AuthGuard />}>
+                {/* <Route index element={<Home />} /> */}
                 <Route index element={<PanelWrapper />} />
                 <Route path="/post/:postId" element={<PostDetailAdmin />} />
 
