@@ -7,10 +7,11 @@ import {AlertProvider} from "./components/alert/AlertHook.tsx";
 import AuthGuard from "./guards/AuthGuard.tsx";
 import Login from './pages/auth/Login.tsx';
 import Register from './pages/auth/Register.tsx';
-import { Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store.ts';
 import UserManager from './pages/admin/UserManager.tsx';
+import Home from "./pages/home/Home.tsx";
+import Contact from "./pages/contact/Contact.tsx";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -20,11 +21,11 @@ createRoot(document.getElementById('root')!).render(
                     <Routes>
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="admin/users" element={<UserManager />} />
+                        <Route path="/contact" element={<Contact />} />
                         <Route path="/" element={<App />}>
-                            <Route index element={<Navigate to="/login" replace />} />
                             <Route element={<AuthGuard />}>
-                                {/* 受保护页面 */}
+                                <Route index element={<Home />}/>
+                                <Route path="admin/users" element={<UserManager />} />
 
                             </Route>
                         </Route>

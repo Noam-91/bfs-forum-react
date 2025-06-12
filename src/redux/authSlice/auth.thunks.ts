@@ -1,19 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import type IUser from "../../shared/models/IUser.ts";
+import type { ILoginFormData } from "../../shared/models/IUser.ts";
 import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (loginForm: { username: string; password: string }, thunkAPI) => {
+    async (loginForm: ILoginFormData, thunkAPI) => {
+        console.log('login action: ', loginForm);
         try {
-            const response = await axios.post(`http://localhost:8080/auth/login`, loginForm, {
-                withCredentials: true
-            });
-            // console.log("Login API response: ", response.data);
-            // const user: IUser = response.data.user;
-            // sessionStorage.setItem('role', user.role);
-            return  response.data ;
+            await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/login`, loginForm,{withCredentials:true});
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }
@@ -24,7 +20,7 @@ export const logout = createAsyncThunk(
     'auth/logout',
     async (_,thunkAPI) => {
         try{
-            await axios.post(`http://localhost:8080/auth/logout`,null,{withCredentials:true});
+            await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/logout`,null,{withCredentials:true});
         } catch (error: unknown) { // Good: using unknown
             return handleThunkAxiosError(error, thunkAPI);
         }
@@ -36,11 +32,12 @@ export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unk
     'auth/checkAuth',
     async (_, thunkAPI) => {
         try {
-            const response = await axios.get(`http://localhost:8080/auth`, {withCredentials:true});
-            const user: IUser = response.data.user;
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/auth`, {withCredentials:true});
+            const user: IUser = response.data;
             sessionStorage.setItem('role', user.role);
             return { user };
         } catch (error) {
+            sessionStorage.removeItem('role');
             return handleThunkAxiosError(error, thunkAPI);
         }
     }
