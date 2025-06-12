@@ -1,89 +1,79 @@
-import {createSlice} from "@reduxjs/toolkit";
-import type IUser from "../../shared/models/IUser.ts";
-import {checkAuth, login, logout, register} from "./user.thunks.ts";
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { register, verifyEmail } from './user.thunks';
 
-interface IUserState {
-    user: IUser | null;
-    status: 'idle' | 'loading' | 'succeeded' | 'failed';
-    error: string | null;
+interface RegisterState {
+    registerStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+    registerError: string | null;
+
+    verifyStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
+    verifyError: string | null;
+    verifiedFirstName: string | null;
 }
+
+const initialState: RegisterState = {
+    registerStatus: 'idle',
+    registerError: null,
+
+    verifyStatus: 'idle',
+    verifyError: null,
+    verifiedFirstName: null,
+};
+
 const userSlice = createSlice({
-    name: "user",
-    initialState: {
-        user: null,
-        status: 'idle',
-        error: null
-    } as IUserState,
-    reducers: { },
-    extraReducers:(builder)=>{
-        builder
-            // login
-            .addCase(login.pending, (state) => {
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(login.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
-                state.status = 'succeeded';
-                state.error = null;
-            })
-            .addCase(login.rejected, (state, action)=>{
-                state.user = null;
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
-            // logout
-            .addCase(logout.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(logout.fulfilled, (state)=>{
-                state.user = null;
-                state.status = 'idle';
-                state.error = null;
-            })
-            .addCase(logout.rejected, (state, action)=>{
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
-            //register
-            .addCase(register.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(register.fulfilled, (state)=>{
-                state.status = 'succeeded';
-                state.error = null;
-            })
-            .addCase(register.rejected, (state, action)=>{
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
-
-            //checkAuth
-            .addCase(checkAuth.pending, (state)=>{
-                state.status = 'loading';
-                state.error = null;
-            })
-            .addCase(checkAuth.fulfilled, (state, action)=>{
-                state.user = action.payload.user;
-                state.status = 'succeeded';
-                state.error = null;
-            })
-            .addCase(checkAuth.rejected, (state, action)=>{
-                state.user = null;
-                state.status = 'failed';
-                state.error = action.payload as string;
-            })
+    name: 'user',
+    initialState,
+    reducers: {
+        resetRegisterState(state) {
+            state.registerStatus = 'idle';
+            state.registerError = null;
+        },
+        resetVerifyState(state) {
+            state.verifyStatus = 'idle';
+            state.verifyError = null;
+            state.verifiedFirstName = null;
+        },
     },
-    selectors:{
-        selectIsLoggedIn: (state) => !!state.user,
-        selectUserRole: (state) => state.user?.role,
-    }
+    extraReducers: (builder) => {
+        builder
+            // 注册
+            .addCase(register.pending, (state) => {
+                state.registerStatus = 'loading';
+                state.registerError = null;
+            })
+            .addCase(register.fulfilled, (state) => {
+                state.registerStatus = 'succeeded';
+            })
+            .addCase(register.rejected, (state, action: PayloadAction<any>) => {
+                state.registerStatus = 'failed';
+                state.registerError = action.payload || 'Registration failed.';
+            })
+
+            // 邮箱验证
+            .addCase(verifyEmail.pending, (state) => {
+                state.verifyStatus = 'loading';
+                state.verifyError = null;
+            })
+            .addCase(verifyEmail.fulfilled, (state, action) => {
+                state.verifyStatus = 'succeeded';
+                state.verifiedFirstName = action.payload.user.firstName;
+            })
+            .addCase(verifyEmail.rejected, (state, action: PayloadAction<any>) => {
+                state.verifyStatus = 'failed';
+                state.verifyError = action.payload || 'Verification failed.';
+            });
+    },
 });
 
-export default userSlice.reducer;
-export const {selectIsLoggedIn, selectUserRole} = userSlice.selectors;
+export const { resetRegisterState, resetVerifyState } = userSlice.actions;
 
+export default userSlice.reducer;
+
+import type { RootState } from '../../redux/store';
+
+export const selectRegisterStatus = (state: RootState) => state.user.registerStatus;
+export const selectRegisterError = (state: RootState) => state.user.registerError;
+
+export const selectVerifyStatus = (state: RootState) => state.user.verifyStatus;
+export const selectVerifyError = (state: RootState) => state.user.verifyError;
+export const selectVerifiedFirstName = (state: RootState) => state.user.verifiedFirstName;

@@ -24,9 +24,9 @@ createRoot(document.getElementById('root')!).render(
                     <Route path="admin/messages" element={<MessageManager />} /> */}
                   <Route path="/*" element={<App />} >
                     <Route index element={<UserHomePage/>}/>
-                    {/* <Route path="posts/:postId" element={<PostDetailPage />}/>
+                    {/* <Route path="posts/:postId" element={<PostDetailPage />}/> */}
                     <Route path="posts/new" element={<PostFormPage mode="create"/>}/>
-                    <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/> */}
+                    <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/>
 
                     <Route element={<AuthGuard/>}>
                           {/* route for guard*/}

@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 // define types of attachments
 export interface Attachment {
   id: string; // Unique ID for the attachment (e.g., timestamp + random)
-  file: File; // The actual File object
+  file?: File; // The actual File object
   name: string;
   size: number;
   type: string; // MIME type, e.g., ' /jpeg', 'application/pdf'
@@ -27,7 +27,7 @@ export const postFormValidationSchema = Yup.object().shape({
       name: Yup.string().required(),
       size: Yup.number().required().max(10 * 1024 * 1024, 'File size cannot exceed 10MB'), // 10MB
       type: Yup.string().required(),
-      // Add other validations if needed for file type etc.
+      url: Yup.string().url().notRequired(),
     })
   ).max(5, 'You can upload a maximum of 5 attachments').nullable(), 
 });

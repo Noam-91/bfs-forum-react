@@ -1,11 +1,14 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {useFormik} from 'formik';
 import {useNavigate} from 'react-router-dom';
-import { Post, PostStatus } from '../../../shared/models/post.model'; 
+import { IPost } from '../../../shared/models/IPost';
 import styles from './PostFormPage.module.scss'; 
 import { postFormValidationSchema, PostCreateFormValues, Attachment } from './postFormValidationSchema';
 import { uploadFileToS3 } from '../../../components/post/service/s3Upload';
-import { postService, CreatePostRequest } from '../../../components/post/service/post.service';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../redux/store';
+import { createPost, getPostById, updatePost } from '../../../redux/postSlice/post.thunks';
+
 
 interface PostFormPageProps {
   mode: 'create' | 'edit';
@@ -16,6 +19,8 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
   const isEditMode = mode === 'edit';
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const currentPost = useSelector((state: RootState) => state.post.currentPost);
 
   // message
   const [message, setMessage] = useState<string | null>(null);
@@ -60,44 +65,19 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
         // in practice, send request using PostCreateFormValues
         // for attachments, it might be necessary to handle them independently
         // then add the returned URL to post's data
-        const postData: Partial<Post> = {
+        const postData: Partial<IPost> = {
           title: values.title,
           content: values.content,
-          attachments: values.attachments?.map(att => att.url)
+          attachments: values.attachments
+            ?.map(att => att.url)
+            .filter((url): url is string => typeof url === 'string')
         };
-        // const postData = {
-        //   title: values.title,
-        //   content: values.content,
-        //   // in practice, attachments would be URL or fileId
-        //   attachmentDetails: values.attachments?.map(att => ({
-        //     name: att.name,
-        //     size: att.size,
-        //     type: att.type,
-        //     // url: att.url // if the attachment has been uploaded
-        //   })),
-        //   // example, in practice it is from backend
-        //   userId: 1,
-        //   lastName: 'Test', 
-        //   firstName: 'John',
-        //   status: PostStatus.PUBLISHED, 
-        //   createdAt: new Date().toISOString(),
-        //   updatedAt: new Date().toISOString(),
-        //   viewCount: 0,
-        //   replyCount: 0,
-        //   isArchived: false
-        // };
-
-        // console.log('Submitting Post Data:', postData);
-        // const result = await postService.createPost(postData);
-
-        // if (result.success){
-        //   setMessage('Post created successfully!');
-        let result;
+        
         if (isEditMode && postId){
-          result = await postService.updatePost(postId, postData);
+          await dispatch(updatePost({ postId, postData: postData as any })); // adjust type if needed          
           setMessage('Post updated successfully!');
         } else {
-          result = await postService.createPost(postData as CreatePostRequest);
+          await dispatch(createPost(postData as any));        
           setMessage(`Post created successfully!`);
           resetForm();
           formik.setFieldValue('attachments', []);
@@ -116,28 +96,26 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
     if (isEditMode && postId) {
       // simulating loading posts from API
       // in practice, fetchPostById(postId)
-      const loadPostData = async () => {
-        try {
-          const post = await postService.getPostById(postId);
-          formik.setValues({
-            title: post.title,
-            content: post.content,
-            attachments: (post.attachments || []).map((url: string) => ({
-              id: url,
-              name: url.split('/').pop() || 'attachment',
-              size: 0,
-              type: '',
-              url,
-            }))
-          });
-        } catch (err) {
-          setMessage('⚠️ Failed to load post');
-        }
-      };
-      loadPostData();
+      dispatch(getPostById(postId));
     }
-  }, [isEditMode, postId, formik]); // formik.setValues 是稳定的，所以可以安全地作为依赖
+  }, [isEditMode, postId, dispatch]); // formik.setValues 是稳定的，所以可以安全地作为依赖
 
+
+  useEffect(() => {
+    if (isEditMode && currentPost) {
+      formik.setValues({
+        title: currentPost.title,
+        content: currentPost.content,
+        attachments: (currentPost.attachments || []).map((url: string) => ({
+          id: url,
+          name: url.split('/').pop() || 'attachment',
+          size: 0,
+          type: '',
+          url,
+        }))
+      });
+    }
+  }, [isEditMode, currentPost, formik]);
 
   // fileSelect: from folder or drag
   const handleFileSelect = useCallback(async (files: FileList | null) => {

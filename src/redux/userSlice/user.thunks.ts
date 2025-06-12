@@ -1,56 +1,48 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import type IUser from "../../shared/models/IUser.ts";
 import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 
-export const login = createAsyncThunk(
-    'user/login',
-    async (loginForm: FormData, thunkAPI) => {
+type RegisterResponse = {
+    message: string;
+    userId?: string;
+};
+
+export const register = createAsyncThunk<
+    RegisterResponse,
+    {
+        username: string;
+        firstName: string;
+        lastName: string;
+        password: string;
+    },
+    { rejectValue: string }
+>('users/register', async (userData, thunkAPI) => {
+    try {
+        const res = await axios.post(`http://localhost:8080/users/register`, userData);
+        return res.data as RegisterResponse;
+    } catch (error) {
+        return handleThunkAxiosError(error, thunkAPI) as ReturnType<typeof thunkAPI.rejectWithValue>;
+    }
+});
+
+type VerifyResponse = {
+    message: string;
+    user: {
+        firstName: string;
+    };
+};
+export const verifyEmail = createAsyncThunk<
+    VerifyResponse,
+    string,
+    { rejectValue: string }
+>(
+    'users/verifyEmail',
+    async (token, thunkAPI) => {
         try {
-            const response = await axios.post(`${process.env.BACKEND_API}/login`, loginForm);
-            const user: IUser = response.data.user;
-            sessionStorage.setItem('role', user.role);
-            return { user };
+            const res = await axios.get(`http://localhost:8080/users/verify?token=${token}`);
+            return res.data as VerifyResponse; // "Email verification successful, welcome! + user.profile.firstName"
         } catch (error) {
-            return handleThunkAxiosError(error, thunkAPI);
+            return handleThunkAxiosError(error, thunkAPI) as ReturnType<typeof thunkAPI.rejectWithValue>;
         }
     }
 );
-
-export const logout = createAsyncThunk(
-    'user/logout',
-    async (_,thunkAPI) => {
-        try{
-            await axios.post(`${process.env.BACKEND_API}/logout`,null,{withCredentials:true});
-        } catch (error: unknown) { // Good: using unknown
-            return handleThunkAxiosError(error, thunkAPI);
-        }
-        sessionStorage.removeItem('role');
-    }
-);
-
-export const register = createAsyncThunk(
-    'user/register',
-    async (registerForm: FormData, thunkAPI) => {
-        try {
-            await axios.post(`${process.env.BACKEND_API}/register`, registerForm);
-        } catch (error) {
-            return handleThunkAxiosError(error, thunkAPI);
-        }
-    }
-);
-
-export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unknown}>(
-    'user/checkAuth',
-    async (_, thunkAPI) => {
-        try {
-            const response = await axios.get(`${process.env.BACKEND_API}/checkAuth`, {withCredentials:true});
-            const user: IUser = response.data.user;
-            sessionStorage.setItem('role', user.role);
-            return { user };
-        } catch (error) {
-            return handleThunkAxiosError(error, thunkAPI);
-        }
-    }
-);
-

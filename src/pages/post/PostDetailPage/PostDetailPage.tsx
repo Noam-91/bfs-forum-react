@@ -6,23 +6,9 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
-import { postService } from "../../../components/post/service/post.service";
 import styles from "./PostDetailPage.module.scss";
 import { Post} from "../../../shared/models/post.model";
 
-
-// interface PostData {
-//   id: string;
-//   title: string;
-//   content: string;
-//   createdAt: string;
-//   updatedAt: string;
-//   viewCount: number;
-//   replyCount: number;
-//   attachments?: string[];
-//   replies?: Reply[];
-//   userInfo: UserInfo;
-// }
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
