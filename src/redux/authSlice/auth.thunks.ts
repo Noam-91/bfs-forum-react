@@ -5,15 +5,12 @@ import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 
 export const login = createAsyncThunk(
     'auth/login',
-    async (loginForm: { username: string; password: string }, thunkAPI) => {
+    async (loginForm: { username: string; password: string; }, thunkAPI) => {
         try {
             const response = await axios.post(`http://localhost:8080/auth/login`, loginForm, {
                 withCredentials: true
             });
-            // console.log("Login API response: ", response.data);
-            // const user: IUser = response.data.user;
-            // sessionStorage.setItem('role', user.role);
-            return  response.data ;
+            return response.data ;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }

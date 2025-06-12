@@ -3,7 +3,6 @@ import authReducer from './authSlice/auth.slice.ts';
 import messageReducer from './messageSlice/message.slice.ts';
 import postReducer from './postSlice/post.slice.ts';
 import userReducer from './userSlice/user.slice.ts';
-import adminUserReducer from './adminSlice/UserSlice/adminUser.slice.ts';
 
 const store = configureStore({
     reducer:{
@@ -11,7 +10,6 @@ const store = configureStore({
         auth: authReducer,
         message: messageReducer,
         post: postReducer,
-        adminUser: adminUserReducer,
     },
 
     devTools: true,

@@ -24,7 +24,8 @@ const Nav = () => {
     <nav className={styles.nav}>
       <div className={styles.navLeft}>
         <Link to="/home">
-            <HomeIcon />
+            {/*<HomeIcon />*/}
+            <img src={HomeIcon} alt="Home" width={24} height={24} />
         </Link>
       </div>
 
@@ -37,7 +38,8 @@ const Nav = () => {
             </NavLink>}
 
             <Tooltip className={styles.navLogout} title={"Logout"} onClick={handleLogout}>
-                <LogoutIcon />
+                {/*<LogoutIcon />*/}
+                <img src={LogoutIcon} alt="Logout" width={24} height={24} />
             </Tooltip>
             <button
                 className={styles.navMenuButton}

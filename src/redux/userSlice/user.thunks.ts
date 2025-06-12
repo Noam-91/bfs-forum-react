@@ -52,7 +52,7 @@ export const updateProfile = createAsyncThunk(
 );
 
 export const banUser = createAsyncThunk(
-    'users/toggleUserActivation',
+    'users/banUser',
     async (userId: string, thunkAPI) => {
         try {
             await axios.put(`http://localhost:8080/users/${userId}/activation`, {
@@ -65,7 +65,7 @@ export const banUser = createAsyncThunk(
 );
 
 export const activateUser = createAsyncThunk(
-    'users/toggleUserActivation',
+    'users/activateUser',
     async (userId: string, thunkAPI) => {
         try {
             await axios.put(`http://localhost:8080/users/${userId}/activation`, {
@@ -100,6 +100,7 @@ export const getAllUsers = createAsyncThunk(
     async (params:GetAllUsersParams, thunkAPI) => {
         try {
             const response = await axios.get(`http://localhost:8080/users/page?${buildParams(params)}`, {withCredentials:true});
+            console.log("response from /users/page:", response.data);
             return response.data;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);

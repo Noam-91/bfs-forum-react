@@ -33,11 +33,12 @@ const Login = () => {
         const resultAction = await dispatch(login(values));
 
         if (login.fulfilled.match(resultAction)) {
-            await dispatch(checkAuth()); // 等 login 成功后才调用
+            await dispatch(checkAuth());
         } else {
             showAlert('error', 'Login Failed', 'Invalid username or password');
         }
     };
+
     useEffect(() => {
         console.log('isLoggedIn:', isLoggedIn, 'role:', userRole);
         if (isLoggedIn) {
@@ -47,7 +48,7 @@ const Login = () => {
             } else if (userRole === 'VISITOR' || userRole === 'UNVERIFIED' || userRole === 'USER') {
                 navigate('/user/home');
             } else {
-                navigate('/unknown-role'); // this not implemented yet
+                navigate('/unknown-role');
             }
         }
     }, [isLoggedIn, userRole, navigate, showAlert]);
