@@ -1,3 +1,5 @@
+export type Role =  "VISITOR"|"UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
+
 export default interface IUser{
     avatarUrl: string;
     firstName: string;
@@ -10,7 +12,6 @@ export default interface IUser{
     isActive:boolean
 }
 
-type Role = "VISITOR" | "UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
 
 export interface ILoginFormData {
     username:string,

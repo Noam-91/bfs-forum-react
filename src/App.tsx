@@ -5,8 +5,8 @@ import {useEffect} from "react";
 import {checkAuth, login} from "./redux/authSlice/auth.thunks.ts";
 import {useAppDispatch} from "./redux/hooks.ts";
 function App() {
-
     //testOnly
+
     const dispatch = useAppDispatch();
     useEffect(() => {
         const username = 'test';
@@ -14,7 +14,6 @@ function App() {
         dispatch(login({username,password}));
         dispatch(checkAuth());
     }, [dispatch]);
-
   return (
     <>
       <Nav/>
