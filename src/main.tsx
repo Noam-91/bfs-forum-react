@@ -17,6 +17,7 @@ import Register from './pages/auth/Register.tsx';
 import { Navigate } from 'react-router-dom';
 
 import UserManager from './pages/admin/UserManager.tsx';
+import EditProfileWrapper from './pages/EditProfileWrapper.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -32,10 +33,10 @@ createRoot(document.getElementById('root')!).render(
               <Route element={<AuthGuard />}>
                 <Route index element={<Navigate to="/login" replace />} />
                 {/* <Route index element={<Home />} /> */}
-                <Route index element={<PanelWrapper />} />
-                <Route path="/post/:postId" element={<PostDetailAdmin />} />
+                <Route path="/posts" element={<PanelWrapper />} />
+                <Route path="/posts/:postId" element={<PostDetailAdmin />} />
 
-                {/* <Route path="/users/:id/profile" element={<EditProfileWrapper />} /> */}
+                <Route path="/users/:id/profile" element={<EditProfileWrapper />} />
 
 
               </Route>

@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import styles from "./AdminPanel.module.scss";
 import { useNavigate } from "react-router-dom";
 import type { IPost } from "../shared/models/IPost";
-import { getQueriedPosts, transferPostStatus } from "../redux/postSlice/post.thunks";
+import { getAllPosts, getQueriedPosts, transferPostStatus } from "../redux/postSlice/post.thunks";
 
 
 
@@ -22,16 +22,44 @@ const AdminPanel: React.FC = () => {
   const postPage = useSelector((state: RootState) => state.post.postPage);
   const posts = postPage?.content ?? [];
 
-  const authors = Array.from(new Set(
-    posts.map(post => `${post.userInfo.firstName} ${post.userInfo.lastName}`)
-  ));
-
   const [filter, setFilter] = useState<"all" | "PUBLISHED" | "BANNED" | "DELETED">("all");
   const [search, setSearch] = useState<string>("");
   const [selectedAuthor, setSelectedAuthor] = useState<string>("");
   const [sort, setSort] = useState<"latest" | "oldest">("latest");
 
+  const [postStats, setPostStats] = useState({
+    PUBLISHED: 0,
+    BANNED: 0,
+    DELETED: 0,
+    TOTAL: 0,
+  });
+
+  const fetchStats = async () => {
+    try {
+      const [publishedRes, bannedRes, deletedRes] = await Promise.all([
+        dispatch(getQueriedPosts({ status: "PUBLISHED" })).unwrap(),
+        dispatch(getQueriedPosts({ status: "BANNED" })).unwrap(),
+        dispatch(getQueriedPosts({ status: "DELETED" })).unwrap(),
+      ]);
+
+      const publishedCount = publishedRes?.content?.length || 0;
+      const bannedCount = bannedRes?.content?.length || 0;
+      const deletedCount = deletedRes?.content?.length || 0;
+
+      setPostStats({
+        PUBLISHED: publishedCount,
+        BANNED: bannedCount,
+        DELETED: deletedCount,
+        TOTAL: publishedCount + bannedCount + deletedCount,
+      });
+    } catch (err) {
+      console.error("Failed to fetch post stats", err);
+    }
+  };
+
   useEffect(() => {
+    fetchStats();
+
     const queryParams = {
       status: filter === "all" ? undefined : filter,
       sort: sort === "latest" ? "DESC" : "ASC",
@@ -40,8 +68,6 @@ const AdminPanel: React.FC = () => {
     };
     dispatch(getQueriedPosts(queryParams));
   }, [dispatch, filter, sort, search, selectedAuthor]);
-
-
 
   const filteredPosts = posts
     .filter((post: IPost) =>
@@ -60,31 +86,35 @@ const AdminPanel: React.FC = () => {
         : new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
     );
 
+  const authors = Array.from(
+    new Set(posts.map(p => `${p.userInfo.firstName} ${p.userInfo.lastName}`))
+  );
 
-  const stats = {
-    Total: posts.length,
-    Published: posts.filter(p => p.status === "PUBLISHED").length,
-    Banned: posts.filter(p => p.status === "BANNED").length,
-    Deleted: posts.filter(p => p.status === "DELETED").length,
+  const statsLabels = {
+    TOTAL: "Total",
+    PUBLISHED: "Published",
+    BANNED: "Banned",
+    DELETED: "Deleted",
   };
 
   const visibleFilters: Array<"all" | "PUBLISHED" | "BANNED" | "DELETED"> = ["all", "PUBLISHED", "BANNED", "DELETED"];
 
+
   return (
     <div className={styles.container}>
-      {/* <nav className={styles.navbar}>Admin Panel</nav> */}
-
+      {/* Statistics Block */}
       <div className={styles.statsContainer}>
-        {Object.entries(stats).map(([key, value]) => (
+        {Object.entries(statsLabels).map(([key, label]) => (
           <Card key={key} className={styles.statsCard}>
             <CardContent>
-              <h2 className={styles.statTitle}>{key}</h2>
-              <p className={styles.statValue}>{value}</p>
+              <h2 className={styles.statTitle}>{label}</h2>
+              <p className={styles.statValue}>{postStats[key as keyof typeof postStats]}</p>
             </CardContent>
           </Card>
         ))}
       </div>
-
+      
+      {/* second block: filters and sorting */}
       <div className={styles.filterContainer}>
         {visibleFilters.map(status => (
           <Button
@@ -102,12 +132,14 @@ const AdminPanel: React.FC = () => {
             {status[0].toUpperCase() + status.slice(1).toLowerCase()}
           </Button>
         ))}
+
         <TextField
           placeholder="Search posts"
           value={search}
           onChange={e => setSearch(e.target.value)}
           className={styles.searchField}
         />
+
         <Select
           value={selectedAuthor}
           onChange={(event: SelectChangeEvent) => setSelectedAuthor(event.target.value)}
@@ -128,9 +160,13 @@ const AdminPanel: React.FC = () => {
         </Select>
       </div>
 
+      {/* third block: filtered post list */}
       <div className={styles.postsContainer}>
         {filteredPosts.map((post: IPost) => (
-          <Card key={post.id} className={`${styles.postCard} ${styles[`${post.status.toLowerCase()}Post`] || ""}`}>
+          <Card
+            key={post.id}
+            className={`${styles.postCard} ${styles[`${post.status.toLowerCase()}Post`] || ""}`}
+          >
             <div className={styles.postHeader}>
               <div className={styles.postInfo}>
                 <div className={styles.titleWithStatus}>
@@ -141,34 +177,51 @@ const AdminPanel: React.FC = () => {
                     </span>
                   )}
                 </div>
-                <p className={styles.publishedDate}>Published: {new Date(post.createdAt!).toLocaleString()}</p>
+                <p className={styles.publishedDate}>
+                  Published: {new Date(post.createdAt!).toLocaleString()}
+                </p>
                 <div className={styles.postStats}>
                   <span>Replies: {post.replyCount}</span>
-                  <span>Views: {post.viewCount}</span>
+                  <span> Views: {post.viewCount}</span>
                 </div>
               </div>
               <div className={styles.postActions}>
-                <Button onClick={() => navigate(`/post/${post.id}`)} variant="outlined">View</Button>
+                <Button onClick={() => navigate(`/posts/${post.id}`)} variant="outlined">
+                  View
+                </Button>
                 {(post.status === "PUBLISHED" || post.status === "BANNED" || post.status === "DELETED") && (
                   <Button
                     variant="contained"
                     color={
                       post.status === "BANNED"
-                        ? "warning"  // Yellow
+                        ? "warning"
                         : post.status === "PUBLISHED"
-                        ? "success"  // Green
+                        ? "success"
                         : "error"
                     }
-                    onClick={() => {
+                    onClick={async () => {
                       const operation =
                         post.status === "PUBLISHED"
                           ? "BAN"
                           : post.status === "BANNED"
                           ? "UNBAN"
                           : "RECOVER";
-                      dispatch(transferPostStatus({ postId: post.id!, operation }));
-                    }}
 
+                      try {
+                        await dispatch(transferPostStatus({ postId: post.id!, operation })).unwrap();
+
+                        // Refetch after change
+                        const queryParams = {
+                          status: filter === "all" ? undefined : filter,
+                          sort: sort === "latest" ? "DESC" : "ASC",
+                          search,
+                          author: selectedAuthor || undefined,
+                        };
+                        await dispatch(getQueriedPosts(queryParams));
+                      } catch (err) {
+                        console.error("Failed to update post status:", err);
+                      }
+                    }}
                   >
                     {post.status === "PUBLISHED" && "Ban Post"}
                     {post.status === "BANNED" && "Unban Post"}
@@ -177,10 +230,10 @@ const AdminPanel: React.FC = () => {
                 )}
               </div>
             </div>
-            
           </Card>
         ))}
       </div>
+
     </div>
   );
 };

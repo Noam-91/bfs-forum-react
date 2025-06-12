@@ -5,6 +5,20 @@ import type IErrorResponse from "../../shared/models/IErrorResponse.ts";
 import type {IPost, IPostQueryParameters, PostOperation} from "../../shared/models/IPost.ts";
 import type {Page} from "../../shared/models/Page.ts";
 
+// post.thunks.ts
+
+export const getAllPosts = createAsyncThunk<IPost[]>(
+  'posts/getAllPosts',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get<IPost[]>('/api/admin/posts/all'); // Adjust your backend route
+      return response.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Failed to fetch all posts');
+    }
+  }
+);
+
 export const getQueriedPosts = createAsyncThunk<
     Page<IPost>,
     IPostQueryParameters,
