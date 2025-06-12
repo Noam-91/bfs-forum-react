@@ -1,4 +1,3 @@
-// src/utils/thunkErrorHandlers.ts
 import axios, { AxiosError } from 'axios';
 import type {AsyncThunkPayloadCreator, ThunkDispatch} from '@reduxjs/toolkit';
 import type IErrorResponse from "../../shared/models/IErrorResponse.ts";
