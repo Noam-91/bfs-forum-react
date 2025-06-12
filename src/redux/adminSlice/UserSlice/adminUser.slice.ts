@@ -34,6 +34,7 @@ const adminUserSlice = createSlice({
             .addCase(fetchAllUsers.pending, (state) => {
                 state.fetchStatus = 'loading';
             })
+
             .addCase(fetchAllUsers.fulfilled, (state, action) => {
                 state.fetchStatus = 'succeeded';
                 state.users = action.payload.content;
@@ -42,6 +43,7 @@ const adminUserSlice = createSlice({
                 state.totalPages = action.payload.totalPages;
                 state.totalElements = action.payload.totalElements;
             })
+
             .addCase(fetchAllUsers.rejected, (state, action) => {
                 state.fetchStatus = 'failed';
                 state.error = action.error.message ?? 'Failed to fetch users';

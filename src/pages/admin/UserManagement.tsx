@@ -11,13 +11,13 @@ import {
     selectPaginationInfo
 } from '../../redux/adminSlice/UserSlice/adminUser.slice.ts';
 import type IUser from '../../shared/models/IUser';
-import './UserManager.css';
+import './UserManagement.css';
 import Nav from '../../components/nav/Nav';
 
 
 const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
 
-const UserManager = () => {
+const UserManagement = () => {
     const dispatch = useAppDispatch();
     const users = useAppSelector(selectUsers);
     console.log('Fetched users:', users);
@@ -183,4 +183,4 @@ const UserManager = () => {
     );
 }
 
-export default UserManager;
+export default UserManagement;

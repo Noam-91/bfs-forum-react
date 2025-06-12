@@ -10,7 +10,8 @@ import Register from './pages/auth/Register.tsx';
 import { Navigate } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store.ts';
-import UserManager from './pages/admin/UserManager.tsx';
+import UserManagement from './pages/admin/UserManagement.tsx';
+import MessageManager from './pages/admin/MessageManagement.tsx';
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -20,7 +21,8 @@ createRoot(document.getElementById('root')!).render(
                     <Routes>
                         <Route path="/login" element={<Login />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="admin/users" element={<UserManager />} />
+                        <Route path="admin/users" element={<UserManagement />} />
+                        <Route path="admin/messages" element={<MessageManager />} />
                         <Route path="/" element={<App />}>
                             <Route index element={<Navigate to="/login" replace />} />
                             <Route element={<AuthGuard />}>
