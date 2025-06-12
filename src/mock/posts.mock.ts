@@ -183,7 +183,46 @@ export const mockUserPosts: Post[] = [
     replyCount: 1,
     isArchived: false,
     attachments: []
-
+    },
+  {
+    id: 'mock-post-11',
+    title: 'Local Image Test 1',
+    content: 'Testing local image preview functionality.',
+    userInfo: {
+      userId: '11',
+      firstName: 'Local',
+      lastName: 'ImageOne',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 12,
+    replyCount: 0,
+    isArchived: false,
+    attachments: [
+      '/assets/sample1.png'
+    ]
+  },
+  {
+    id: 'mock-post-12',
+    title: 'Local Image Test 2',
+    content: 'Another local image in attachments.',
+    userInfo: {
+      userId: '12',
+      firstName: 'Local',
+      lastName: 'ImageTwo',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 24,
+    replyCount: 1,
+    isArchived: false,
+    attachments: [
+      '/assets/sample2.jpg'
+    ]
   }
 ];
 
