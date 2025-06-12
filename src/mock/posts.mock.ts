@@ -2,79 +2,188 @@ import { Post, PostStatus } from '../shared/models/post.model';
 
 export const mockUserPosts: Post[] = [
   {
-    id: '1',
-    title: 'How to implement microservices with Spring Boot?',
-    content: 'Looking for best practices...',
-    userId: 1,
-    lastName: 'Doe',
-    firstName: 'John',
-    userName: 'John Doe',
+    id: 'mock-post-id',
+    title: 'Mock Post Title',
+    content: 'This is a mocked post for testing.',
+    userInfo: {
+      userId: '1',
+      firstName: 'Mock',
+      lastName: 'Tester',
+      imgUrl: ''
+    },
     status: PostStatus.PUBLISHED,
-    createdAt: '2025-01-15T10:30:00',
-    updatedAt: '2025-01-15T14:45:00',
-    viewCount: 234,
-    replyCount: 5,
-    isArchived: false
-  },
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 100,
+    replyCount: 1,
+    isArchived: false,
+    attachments: [
+      'https://example.com/sample.pdf',
+      'https://example.com/image.png'
+    ]
+    },
   {
-    id: '2',
-    title: 'Understanding Docker Containers',
-    content: 'Draft content about Docker...',
-    userId: 1,
-    lastName: 'Doe',
-    firstName: 'John',
-    userName: 'John Doe',
-    status: PostStatus.UNPUBLISHED,
-    createdAt: '2025-01-18T09:00:00',
-    updatedAt: '2025-01-18T11:00:00',
-    viewCount: 0,
-    replyCount: 0,
-    isArchived: false
-  },
-  {
-    id: '3',
-    title: 'My Personal Project Notes',
-    content: 'Private notes...',
-    userId: 1,
-    lastName: 'Doe',
-    firstName: 'John',
-    userName: 'John Doe',
-    status: PostStatus.HIDDEN,
-    createdAt: '2025-01-10T08:00:00',
-    updatedAt: '2025-01-11T10:00:00',
-    viewCount: 45,
+    id: 'mock-post-2',
+    title: 'Learning React',
+    content: 'React is a powerful library for building UIs.',
+    userInfo: {
+      userId: '2',
+      firstName: 'Alice',
+      lastName: 'Smith',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 80,
     replyCount: 2,
-    isArchived: false
+    isArchived: false,
+    attachments: []
   },
   {
-    id: '4',
-    title: 'Completed Tutorial: REST API Design',
-    content: 'REST API best practices...',
-    userId: 1,
-    lastName: 'Doe',
-    firstName: 'John',
-    userName: 'John Doe',
+    id: 'mock-post-3',
+    title: 'Understanding TypeScript',
+    content: 'TypeScript brings type safety to JavaScript projects.',
+    userInfo: {
+      userId: '3',
+      firstName: 'Bob',
+      lastName: 'Johnson',
+      imgUrl: ''
+    },
     status: PostStatus.PUBLISHED,
-    createdAt: '2025-01-05T14:00:00',
-    updatedAt: '2025-01-05T14:00:00',
-    viewCount: 567,
-    replyCount: 12,
-    isArchived: true
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 65,
+    replyCount: 0,
+    isArchived: false,
+    attachments: []
   },
   {
-    id: '5',
-    title: 'React vs Vue comparison',
-    content: 'Which framework is better...',
-    userId: 2,
-    lastName: 'Smith',
-    firstName: 'Jane',
-    userName: 'Jane Smith',
+    id: 'mock-post-4',
+    title: 'Getting started with Vite',
+    content: 'Vite is a modern front-end build tool.',
+    userInfo: {
+      userId: '4',
+      firstName: 'Charlie',
+      lastName: 'Davis',
+      imgUrl: ''
+    },
     status: PostStatus.PUBLISHED,
-    createdAt: '2025-01-05T14:00:00',
-    updatedAt: '2025-01-05T14:00:00',
-    viewCount: 88,
-    replyCount: 66,
-    isArchived: true
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 42,
+    replyCount: 1,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-5',
+    title: 'Deploying with Netlify',
+    content: 'Netlify offers simple deployment for static sites.',
+    userInfo: {
+      userId: '5',
+      firstName: 'Dana',
+      lastName: 'Lee',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 53,
+    replyCount: 0,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-6',
+    title: 'JavaScript Basics',
+    content: 'Let’s talk about variables, loops, and functions.',
+    userInfo: {
+      userId: '6',
+      firstName: 'Eve',
+      lastName: 'Martinez',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 77,
+    replyCount: 3,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-7',
+    title: 'CSS Grid vs Flexbox',
+    content: 'Which layout system is right for your project?',
+    userInfo: {
+      userId: '7',
+      firstName: 'Frank',
+      lastName: 'Wright',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 36,
+    replyCount: 2,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-8',
+    title: 'Async/Await in JavaScript',
+    content: 'Handle asynchronous code with cleaner syntax.',
+    userInfo: {
+      userId: '8',
+      firstName: 'Grace',
+      lastName: 'Kim',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 91,
+    replyCount: 5,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-9',
+    title: 'Frontend Interview Tips',
+    content: 'Here’s how to prepare for your next frontend interview.',
+    userInfo: {
+      userId: '9',
+      firstName: 'Henry',
+      lastName: 'Nguyen',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 129,
+    replyCount: 4,
+    isArchived: false,
+    attachments: []
+  },
+  {
+    id: 'mock-post-10',
+    title: 'Best Practices for State Management',
+    content: 'Explore Redux, Zustand, and Context API.',
+    userInfo: {
+      userId: '10',
+      firstName: 'Isabel',
+      lastName: 'Torres',
+      imgUrl: ''
+    },
+    status: PostStatus.PUBLISHED,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    viewCount: 84,
+    replyCount: 1,
+    isArchived: false,
+    attachments: []
+
   }
 ];
 

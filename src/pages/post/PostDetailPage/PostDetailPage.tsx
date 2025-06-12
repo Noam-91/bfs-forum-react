@@ -8,34 +8,27 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import { postService } from "../../../components/post/service/post.service";
 import styles from "./PostDetailPage.module.scss";
+import { Post} from "../../../shared/models/post.model";
 
-interface Reply {
-  id: string;
-  content: string;
-  author: string;
-  createdAt: string;
-  userId: string;
-}
 
-interface PostData {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  authorId: string;
-  createdAt: string;
-  updatedAt: string;
-  viewCount: number;
-  replyCount: number;
-  attachments?: { name: string; url: string; type: string }[];
-  replies?: Reply[];
-}
+// interface PostData {
+//   id: string;
+//   title: string;
+//   content: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   viewCount: number;
+//   replyCount: number;
+//   attachments?: string[];
+//   replies?: Reply[];
+//   userInfo: UserInfo;
+// }
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
   
-  const [post, setPost] = useState<PostData | null>(null);
+  const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
@@ -68,9 +61,9 @@ const PostDetailPage: React.FC = () => {
 
     setSubmittingReply(true);
     try {
-      // 调用回复API（需要在postService中添加）
-      // await postService.createReply(postId, { content: replyContent });
-      
+      // use createReply - testing
+      await postService.createReply("abc123", { content: "Hello, this is a creation post test" });
+
       // 临时模拟
       console.log('提交回复:', replyContent);
       setReplyContent("");
@@ -84,6 +77,22 @@ const PostDetailPage: React.FC = () => {
       setSubmittingReply(false);
     }
   };
+
+  const handleDeleteReply = async (replyId: string) => {
+    if (!confirm('Are you sure to delete this reply？')) return;
+
+    try {
+      // await postService.deleteReply(replyId);
+      console.log('Delete the reply:', replyId);
+      
+      // 重新加载数据
+      const updatedPost = await postService.getPostById(postId!);
+      setPost(updatedPost);
+    } catch (err: any) {
+      console.error('Failed to delete:', err);
+    }
+  };
+
 
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleString('zh-CN');
@@ -100,7 +109,7 @@ const PostDetailPage: React.FC = () => {
   if (error) return <div className={styles.error}>Error: {error}</div>;
   if (!post) return <div className={styles.error}>Post Not Found</div>;
 
-  const isAuthor = currentUserId === post.authorId;
+  const isAuthor = currentUserId === post.userInfo.userId;
 
   return (
     <div className={styles.postDetail}>
@@ -125,14 +134,14 @@ const PostDetailPage: React.FC = () => {
           <div className={styles.postHeader}>
             <div className={styles.authorInfo}>
               <Avatar className={styles.avatar}>
-                {post.author.charAt(0).toUpperCase()}
+                {post.userInfo?.firstName?.charAt(0).toUpperCase()}
               </Avatar>
               <div>
                 <Typography variant="h5" fontWeight={600}>
                   {post.title}
                 </Typography>
                 <Typography variant="subtitle2" color="text.secondary">
-                  Author: {post.author} • {formatDate(post.createdAt)}
+                    Author: {post.userInfo.firstName} {post.userInfo.lastName} • {formatDate(post.createdAt)}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   Preview {post.viewCount} • Replies {post.replyCount}
@@ -153,19 +162,28 @@ const PostDetailPage: React.FC = () => {
               <Typography variant="subtitle2" gutterBottom>
                 Attachments:
               </Typography>
-              {post.attachments.map((attachment, index) => (
-                <div key={index} className={styles.attachmentItem}>
-                  <span>{getFileIcon(attachment.type)}</span>
-                  <a 
-                    href={attachment.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className={styles.attachmentLink}
-                  >
-                    {attachment.name}
-                  </a>
-                </div>
-              ))}
+                {post.attachments.map((url, index) => {
+                    const name = url.split('/').pop() || `File ${index + 1}`;
+                    const type = name.endsWith('.pdf')
+                    ? 'application/pdf'
+                    : name.endsWith('.png') || name.endsWith('.jpg')
+                    ? 'image/*'
+                    : 'application/octet-stream';
+
+                    return (
+                    <div key={index} className={styles.attachmentItem}>
+                        <span>{getFileIcon(type)}</span>
+                        <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.attachmentLink}
+                        >
+                        {name}
+                        </a>
+                    </div>
+                    );
+                })}
             </div>
           )}
         </CardContent>
@@ -210,16 +228,26 @@ const PostDetailPage: React.FC = () => {
               <CardContent>
                 <div className={styles.replyHeader}>
                   <Avatar className={styles.replyAvatar}>
-                    {reply.author.charAt(0).toUpperCase()}
+                        {reply.userInfo?.firstName?.charAt(0) ?? '?'}
                   </Avatar>
                   <div>
                     <Typography variant="subtitle2" fontWeight={600}>
-                      {reply.author}
+                        {reply.userInfo.firstName} {reply.userInfo.lastName}
                     </Typography>
                     <Typography variant="caption" color="text.secondary">
                       {formatDate(reply.createdAt)}
                     </Typography>
                   </div>
+                    {currentUserId === reply.userInfo.userId && (
+                        <Button
+                        size="small"
+                        color="error"
+                        onClick={() => handleDeleteReply(reply.id)}
+                        className={styles.deleteReplyBtn}
+                        >
+                        Delete
+                        </Button>
+                    )}
                 </div>
                 <Typography variant="body2" className={styles.replyContent}>
                   {reply.content}

@@ -19,7 +19,7 @@ createRoot(document.getElementById('root')!).render(
                   {/*pages without Nav component*/}
                   <Route path="/*" element={<AppLayout />} >
                     <Route index element={<UserHomePage/>}/>
-                    <Route index element={<PostDetailPage/>}/>
+                    <Route path="posts/:postId" element={<PostDetailPage />}/>
                     <Route path="posts/new" element={<PostFormPage mode="create"/>}/>
                     <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/>
 

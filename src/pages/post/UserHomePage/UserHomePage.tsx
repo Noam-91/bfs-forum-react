@@ -71,22 +71,42 @@ const UserHomePage: React.FC = () => {
   
 
   const loadPosts = async (pageToLoad = 0) => {
-        try {
-            const response = await postService.getPublishedPosts(pageToLoad, 3, 'createdAt', 'desc');
-            const newPosts = response.content;
+    // test
+    try {
+      // pagination simulation
+      const pageSize = 3;
+      const start = pageToLoad * pageSize;
+      const end = start + pageSize;
+      const newPosts = mockPublishedPosts.slice(start, end);
+
+      if (pageToLoad === 0) {
+        setPosts(newPosts);
+      } else {
+        setPosts(prevPosts => [...prevPosts, ...newPosts]);
+      }
+
+      setPage(pageToLoad);
+      setHasMore(end < mockPublishedPosts.length);
+    } catch (error) {
+      console.log('Failed to load mock posts:', error);
+    }
+
+        // try {
+        //     const response = await postService.getPublishedPosts(pageToLoad, 3, 'createdAt', 'desc');
+        //     const newPosts = response.content;
             
-            if (pageToLoad === 0){
-                setPosts(newPosts);
-            } else {
-                // if loading subsequent pages, append to existing pages
-                setPosts(prevPosts => [...prevPosts, ...newPosts]);
-            }
+        //     if (pageToLoad === 0){
+        //         setPosts(newPosts);
+        //     } else {
+        //         // if loading subsequent pages, append to existing pages
+        //         setPosts(prevPosts => [...prevPosts, ...newPosts]);
+        //     }
             
-            setPage(pageToLoad);
-            setHasMore(!response.last);
-        } catch (error){
-            console.log('Failed to load posts: ', error);
-        }
+        //     setPage(pageToLoad);
+        //     setHasMore(!response.last);
+        // } catch (error){
+        //     console.log('Failed to load posts: ', error);
+        // }
     };
   
   // Sort posts
