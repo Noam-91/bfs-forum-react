@@ -56,19 +56,6 @@
   margin-left: $spacing-lg;
 }
 
-.viewSvg{
-  width: .75rem;
-  height: .75rem;
-  color: $primary-color;
-  margin: 0 2px;
-}
-
-.chatSvg{
-  width: .75rem;
-  height: .75rem;
-  color: $success-color;
-  margin: 0 2px;
-}
 
 .viewCount {
   font-size: 1rem;
@@ -87,4 +74,18 @@
     font-size: 1.5rem;
     margin-bottom: $spacing-lg;
   }
+}
+
+.viewSvg{
+  width: .75rem;
+  height: .75rem;
+  color: $primary-color;
+  margin: 0 2px;
+}
+
+.chatSvg{
+  width: .75rem;
+  height: .75rem;
+  color: $success-color;
+  margin: 0 2px;
 }
