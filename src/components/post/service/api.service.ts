@@ -44,42 +44,42 @@ API.interceptors.response.use(
   (error) => {
     console.error('API Error:', error);
 
-    // handle network error
-    if (!error.response){
-        console.error('Newwork Error: failed to connect Server');
-        return Promise.reject({
-            message: 'Failed to connect internet, pleasae double check',
-            code: 'NETWORK_ERROR' 
-        });
-    }
+    // // handle network error
+    // if (!error.response){
+    //     console.error('Network Error: failed to connect Server');
+    //     return Promise.reject({
+    //         message: 'Failed to connect internet, pleasae double check',
+    //         code: 'NETWORK_ERROR' 
+    //     });
+    // }
 
     const { status, data } = error.response;
 
-    switch (status) {
-      case 401:
-        // 未授权 - 清除token并重定向
-        localStorage.removeItem('token');
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userRole');
-        window.location.href = '/login';
-        break;
-      case 403:
-        console.error('权限不足');
-        break;
-      case 404:
-        console.error('资源未找到');
-        break;
-      case 500:
-        console.error('服务器内部错误');
-        break;
-      default:
-        console.error(`HTTP Error ${status}:`, data?.message || error.message);
-    }
-
-    // if (error.response?.status === 401) {
-    //   // Token 过期，跳转到登录页
-    //   window.location.href = '/login';
+    // switch (status) {
+    //   case 401:
+    //     // 未授权 - 清除token并重定向
+    //     localStorage.removeItem('token');
+    //     localStorage.removeItem('userId');
+    //     localStorage.removeItem('userRole');
+    //     window.location.href = '/login';
+    //     break;
+    //   case 403:
+    //     console.error('权限不足');
+    //     break;
+    //   case 404:
+    //     console.error('资源未找到');
+    //     break;
+    //   case 500:
+    //     console.error('服务器内部错误');
+    //     break;
+    //   default:
+    //     console.error(`HTTP Error ${status}:`, data?.message || error.message);
     // }
+
+    if (error.response?.status === 401) {
+      // Token 过期，跳转到登录页
+      window.location.href = '/login';
+    }
     return Promise.reject(error);
   }
 );
