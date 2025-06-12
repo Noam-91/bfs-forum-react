@@ -7,14 +7,17 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import styles from "./PostDetailPage.module.scss";
-import { Post} from "../../../shared/models/post.model";
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../redux/store';
+import { getPostById, replyPost } from '../../../redux/postSlice/post.thunks';
 
 
 const PostDetailPage: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();
   const navigate = useNavigate();
-  
-  const [post, setPost] = useState<Post | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const post = useSelector((state: RootState) => state.post.currentPost);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [replyContent, setReplyContent] = useState("");
@@ -24,22 +27,10 @@ const PostDetailPage: React.FC = () => {
 
   // loading posts
   useEffect(() => {
-    const loadPost = async () => {
-      if (!postId) return;
-      
-      try {
-        setLoading(true);
-        const data = await postService.getPostById(postId);
-        setPost(data);
-      } catch (err: any) {
-        setError(err.message || 'Failed to load');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPost();
-  }, [postId]);
+    if (postId) {
+        dispatch(getPostById(postId));
+    }
+  },[postId, dispatch]);
 
   // submit reply
   const handleReplySubmit = async () => {
@@ -47,18 +38,13 @@ const PostDetailPage: React.FC = () => {
 
     setSubmittingReply(true);
     try {
-      // use createReply - testing
-      await postService.createReply("abc123", { content: "Hello, this is a creation post test" });
+        await dispatch(replyPost({ postId, comment: replyContent }));
 
-      // 临时模拟
-      console.log('提交回复:', replyContent);
-      setReplyContent("");
-      
-      // 重新加载帖子数据获取最新回复
-      const updatedPost = await postService.getPostById(postId);
-      setPost(updatedPost);
+        // 临时模拟
+        console.log('Reply submitted:', replyContent);
+        setReplyContent("");
     } catch (err: any) {
-      console.error('回复失败:', err);
+      console.error('Reply failed:', err);
     } finally {
       setSubmittingReply(false);
     }
@@ -69,19 +55,17 @@ const PostDetailPage: React.FC = () => {
 
     try {
       // await postService.deleteReply(replyId);
-      console.log('Delete the reply:', replyId);
-      
-      // 重新加载数据
-      const updatedPost = await postService.getPostById(postId!);
-      setPost(updatedPost);
+      console.log('Reply deleted:', replyId);
     } catch (err: any) {
-      console.error('Failed to delete:', err);
+      console.error('Reply not deleted:', err);
     }
   };
 
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleString('zh-CN');
+  const formatDate = (dateInput: Date | string |undefined): string => {
+    if (!dateInput) return 'Unknown date';
+    const date = dateInput instanceof Date ? dateInput : new Date(dateInput); 
+    return date.toLocaleDateString('zh_CN');
   };
 
   const getFileIcon = (type: string) => {
@@ -95,7 +79,7 @@ const PostDetailPage: React.FC = () => {
   if (error) return <div className={styles.error}>Error: {error}</div>;
   if (!post) return <div className={styles.error}>Post Not Found</div>;
 
-  const isAuthor = currentUserId === post.userInfo.userId;
+  const isAuthor = currentUserId === post.userInfo.id;
 
   return (
     <div className={styles.postDetail}>
@@ -224,11 +208,15 @@ const PostDetailPage: React.FC = () => {
                       {formatDate(reply.createdAt)}
                     </Typography>
                   </div>
-                    {currentUserId === reply.userInfo.userId && (
+                    {currentUserId === reply.userInfo.id && (
                         <Button
                         size="small"
                         color="error"
-                        onClick={() => handleDeleteReply(reply.id)}
+                        onClick={() => {
+                            if (reply.id){
+                                handleDeleteReply(reply.id)
+                            }
+                        }}
                         className={styles.deleteReplyBtn}
                         >
                         Delete
@@ -236,7 +224,7 @@ const PostDetailPage: React.FC = () => {
                     )}
                 </div>
                 <Typography variant="body2" className={styles.replyContent}>
-                  {reply.content}
+                  {reply.comment}
                 </Typography>
               </CardContent>
             </Card>
