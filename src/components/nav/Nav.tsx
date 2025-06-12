@@ -23,7 +23,17 @@ const Nav = () => {
           <img src={ReactIcon} alt="Home" className={styles.navLogo} />
         </Link>
       </div>
-
+      {user && (
+        <div>
+          
+          <button
+            onClick={() => navigate(`/users/${user.id}/profile`)}
+            className={styles.navButton}
+          >
+            Edit Profile
+          </button>
+        </div>
+      )}
       <div className={styles.navRight}>
           {user && <NavLink
             to={`/users/${user.id}/profile`}

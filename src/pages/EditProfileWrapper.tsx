@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-// import EditProfile from './EditProfile';
+import EditProfile from './EditProfile';
 import type { RootState } from '../redux/store';
 
 const EditProfileWrapper: React.FC = () => {
@@ -17,14 +17,14 @@ const EditProfileWrapper: React.FC = () => {
     return <div>Loading...</div>; // or redirect if no user
   }
 
-  // return (
-  //   <EditProfile
-  //     avatarUrl={user.avatarUrl}
-  //     firstName={user.firstName}
-  //     lastName={user.lastName}
-  //     email={user.email}
-  //     onSave={handleSave}
-  //   />
-  // );
+  return (
+    <EditProfile
+      avatarUrl={user.avatarUrl}
+      firstName={user.firstName}
+      lastName={user.lastName}
+      email={user.email}
+      onSave={handleSave}
+    />
+  );
 };
 export default EditProfileWrapper;
