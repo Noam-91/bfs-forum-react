@@ -1,37 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {
-    fetchAllUsers,
-    banUser,
-    activateUser
-} from '../../redux/adminSlice/UserSlice/adminUser.thunks.ts';
-import {
-    selectUsers,
-    selectUserStatus,
-    selectPaginationInfo
-} from '../../redux/adminSlice/UserSlice/adminUser.slice.ts';
+
 import type IUser from '../../shared/models/IUser';
 import './UserManagement.css';
 import Nav from '../../components/nav/Nav';
-
+import {activateUser, banUser, getAllUsers} from "../../redux/userSlice/user.thunks.ts";
 
 const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
 
 const UserManagement = () => {
     const dispatch = useAppDispatch();
-    const users = useAppSelector(selectUsers);
+    const {userPage: users, status} = useAppSelector(state=>state.user);
     console.log('Fetched users:', users);
-    const status = useAppSelector(selectUserStatus);
-    const {page, totalPages} = useAppSelector(selectPaginationInfo);
+    const {number:page, totalPages} = users!;
 
     const [pageSize] = useState(3);
     const [usernameFilter, setUsernameFilter] = useState('');
     const [roleFilter, setRoleFilter] = useState('ALL');
     const [jumpToPage, setJumpToPage] = useState('');
 
+
     const loadUsers = (targetPage = 0) => {
         dispatch(
-            fetchAllUsers({
+            getAllUsers({
                 page: targetPage,
                 size: pageSize,
                 username: usernameFilter || undefined,
