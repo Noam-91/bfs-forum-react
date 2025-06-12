@@ -15,3 +15,12 @@ export interface ContactFormData {
     subject: string;
     content: string;
 }
+export interface PaginatedMessageResponse {
+    content: IMessage[];
+    totalPages: number;
+    totalElements: number;
+    number: number;
+    size: number;
+    first: boolean;
+    last: boolean;
+}

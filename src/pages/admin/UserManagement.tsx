@@ -12,7 +12,7 @@ const UserManagement = () => {
     const dispatch = useAppDispatch();
     const { userPage, status } = useAppSelector(state => state.user);
 
-    const [pageSize] = useState(3);
+    const [pageSize] = useState(5);
     const [usernameFilter, setUsernameFilter] = useState('');
     const [roleFilter, setRoleFilter] = useState('ALL');
     const [jumpToPage, setJumpToPage] = useState('');
