@@ -12,3 +12,7 @@ export default interface IUser{
     createdAt?: string;
 }
 
+export interface ILoginFormData {
+    username:string,
+    password:string
+}

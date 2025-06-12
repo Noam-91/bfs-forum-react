@@ -33,23 +33,16 @@ const Login = () => {
         const resultAction = await dispatch(login(values));
 
         if (login.fulfilled.match(resultAction)) {
-            await dispatch(checkAuth());
+            await dispatch(checkAuth()); // 等 login 成功后才调用
         } else {
             showAlert('error', 'Login Failed', 'Invalid username or password');
         }
     };
-
     useEffect(() => {
         console.log('isLoggedIn:', isLoggedIn, 'role:', userRole);
         if (isLoggedIn) {
             showAlert('success', 'Login', 'Login successful!');
-            if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
-                navigate('/admin/users');
-            } else if (userRole === 'VISITOR' || userRole === 'UNVERIFIED' || userRole === 'USER') {
-                navigate('/user/home');
-            } else {
-                navigate('/unknown-role');
-            }
+            navigate('/');
         }
     }, [isLoggedIn, userRole, navigate, showAlert]);
 

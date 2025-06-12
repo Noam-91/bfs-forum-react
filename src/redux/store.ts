@@ -6,8 +6,8 @@ import userReducer from './userSlice/user.slice.ts';
 
 const store = configureStore({
     reducer:{
-        user: userReducer,
         auth: authReducer,
+        user: userReducer,
         message: messageReducer,
         post: postReducer,
     },
