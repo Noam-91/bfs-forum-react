@@ -1,4 +1,78 @@
-@use "@css/variables" as *;
-.container{
+@use "../../assets/css/variables" as *;
+
+.container {
   color: $primary-color;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navLeft {
+  /* Left section (logo) container */
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.navLogo {
+  height: 40px;
+}
+
+.navUsername {
+  margin-right: 1rem;
+  font-weight: 500;
+}
+
+.navLogout {
+  margin-right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2.5rem;
+  color:red;
+}
+
+.navMenuButton {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  cursor: pointer;
+}
+
+.navDropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  z-index: 10;
+}
+
+/* Show dropdown only when hovering the menu button or the dropdown itself */
+.navMenuButton:hover + .navDropdown,
+.navDropdown:hover {
+  display: block;
+}
+
+.navDropdown li {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
 }

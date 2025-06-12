@@ -33,6 +33,7 @@ const Login = () => {
         const resultAction = await dispatch(login(values));
 
         if (login.fulfilled.match(resultAction)) {
+            localStorage.setItem('userRole', 'USER');
             await dispatch(checkAuth()); // 等 login 成功后才调用
         } else {
             showAlert('error', 'Login Failed', 'Invalid username or password');
