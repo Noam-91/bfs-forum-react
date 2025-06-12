@@ -1,0 +1,119 @@
+@use "../../assets/css/variables" as *;
+
+.userPosts {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.userPostsRow {
+  display: grid;
+  grid-template-columns: 3fr 2fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background-color: #fff;
+}
+
+.userPostsRowHeader {
+  @extend .userPostsRow;
+  background-color: #f0f0f0;
+  font-weight: bold;
+}
+
+.userPostsRow .title {
+  text-align: left;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.userPostsRow > div {
+  text-align: center;
+}
+
+.pagination {
+  display: flex;
+  gap: 4px;
+  margin-top: 16px;
+  justify-content: center;
+}
+
+.pageButton {
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #f9f9f9;
+  }
+}
+
+.active {
+  background-color: #f0db4f;
+  font-weight: bold;
+}
+
+.filterContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.tabBar {
+  display: flex;
+  gap: 8px;
+}
+
+.tabBar button {
+  flex: 1;
+  padding: 8px 16px;
+  background-color: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.activeTab {
+  background-color: #f0db4f;
+  color: #333;
+  border-color: #f0c000;
+}
+
+.searchArea {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.searchButton {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.searchButton:hover {
+  background-color: #0056b3;
+}

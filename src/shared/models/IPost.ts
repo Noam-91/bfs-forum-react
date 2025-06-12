@@ -1,4 +1,3 @@
-import axios from 'axios';
 export interface IPost {
     id?: string;
     userInfo: IUserInfo;
@@ -51,19 +50,3 @@ export interface IPostQueryParameters {
 
 
 export type PostOperation = 'BAN'|'UNBAN'|'HIDE'|'SHOW'|'DELETE'|'RECOVER'|'ARCHIVE'|'UNARCHIVE';
-async function fetchUserPosts() {
-  try {
- 
-    const response = await axios.get<IPost[]>(`/63328/posts`, {
-    });
-    return response.data;      
-  } catch (err) {
-    console.error('Error fetching posts', err);
-    throw err;
-  }
-}
-
-// Usage
-fetchUserPosts().then(posts => {
-  console.log(posts);
-});

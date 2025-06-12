@@ -6,6 +6,7 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import {AlertProvider} from "./components/alert/AlertHook.tsx";
 import AuthGuard from "./guards/AuthGuard.tsx";
 import History from './pages/history/History.tsx';
+import UserPosts from './pages/userPosts/userPosts.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')!).render(
                   <Route path="/" element={<App />} >
                   <Route path="/history" element={<History />}/>
                       {/*pages with Nav component*/}
+                    <Route path="/userposts" element={<UserPosts />}/>
                       <Route element={<AuthGuard/>}>
                           {/*guarded pages*/}
                         

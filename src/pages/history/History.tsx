@@ -7,6 +7,8 @@ import HistoryFilter from './HistoryFilter';
 import { fakeHistory } from '../../mock/history';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { getQueriedHistory } from '../../redux/historySlice/hisotry.thunks';
+import PostItem from '../../components/post-item/PostItem';
+import type { IPost } from './test';
 
 
 interface HistoryItem {
@@ -46,11 +48,11 @@ const formatAgo = (iso: string): string => {
 
 const History = () => {
 const dispatch = useAppDispatch();
-const hisotry = useAppSelector(state =>state.history);
+ const { historyPage, status, error } = useAppSelector((s) => s.history);
   const DEFAULT_PAGE = 0;
   const DEFAULT_SIZE = 3;
 
-  const [items, setItems] = useState<HistoryItem[]>([]);
+  // const [items, setItems] = useState<HistoryItem[]>([]);
   const [totalPages, setTotalPages] = useState(1);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -72,22 +74,10 @@ const hisotry = useAppSelector(state =>state.history);
       ...(endDate && { endDate }),
     };
 
-    // dispatch(getQueriedHistory(params));
-
-    axios.get('/history/search', {
-      headers: { 'X-User-Id': '…' },
-      params,
-    })
-    .then(res => {
-      setItems(res.data.content || []);
-      setTotalPages(res.data.totalPages);
-    })
-    .catch(() => {
-      // fallback mock
-      const slice = fakeHistory.content.slice(page * size, (page + 1) * size);
-      setItems(slice as HistoryItem[]);
+    dispatch(getQueriedHistory(params));
+    // const slice = fakeHistory.content.slice(page * size, (page + 1) * size);
+    //   setItems(slice as HistoryItem[]);
       setTotalPages(fakeHistory.totalPages);
-    });
   }, [keyword, startDate, endDate, page, size]);
 
   // Handler to update URL and trigger fetch
@@ -100,7 +90,7 @@ const hisotry = useAppSelector(state =>state.history);
     <div className={styles.history}>
       <HistoryFilter onResults={onFilter} />
 
-      <div className={`${styles.historyRow} ${styles.historyRowHeader}`}>
+      {/* <div className={`${styles.historyRow} ${styles.historyRowHeader}`}>
         <div>Title</div><div>Author</div><div>Replies</div><div>Views</div><div>Viewed</div>
       </div>
 
@@ -112,9 +102,11 @@ const hisotry = useAppSelector(state =>state.history);
           <div>{item.post.viewCount}</div>
           <div>{formatAgo(item.viewedAt)}</div>
         </div>
+      ))} */}
+      {historyPage?.content.map(h =>(
+        <PostItem key = {h.postId} left0={"author"} left1={"viewCount"} left2={"replyCount"} right={"viewAt"} post={h.post as unknown as IPost} />
       ))}
-{/* 
-      <PostList left0={"Title"} left1={"firstName"} left2= {"lastName"} left3 = {"replyCount"} left4={"viewCount"} right= {"viewedAt"} posts={items} /> */}
+
 
       <div className={styles.pagination}>
         {Array.from({ length: totalPages }).map((_, idx) => (
