@@ -54,13 +54,12 @@ const Home = () => {
     type positionParams = {
         left0: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
         left1: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
-        left2: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
+        left2?: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
         right: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt'
     }
     const params:positionParams = {
         left0: 'author',
         left1: 'createdAt',
-        left2: 'replyCount',
         right: 'viewCount'
     }
 

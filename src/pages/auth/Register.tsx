@@ -3,18 +3,15 @@ import * as Yup from 'yup';
 import {Link, useNavigate} from 'react-router-dom';
 import './Register.css';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { register } from '../../redux/userSlice/user.thunks';
+import { register } from '../../redux/userSlice/user.thunks.ts';
 import {useAlert} from "../../components/alert/AlertHook.tsx";
-import {
-    selectRegisterStatus,
-    selectRegisterError
-} from '../../redux/userSlice/user.slice';
+
 import {useEffect} from "react";
+import type IUser from "../../shared/models/IUser.ts";
 
 const Register = () => {
     const dispatch = useAppDispatch();
-    const status = useAppSelector(selectRegisterStatus);
-    const error = useAppSelector(selectRegisterError);
+    const {status, error} = useAppSelector(state=>state.user);
 
     const initialValues = {
         username: '',
@@ -35,7 +32,13 @@ const Register = () => {
     });
 
     const handleSubmit = (values: typeof initialValues) => {
-        dispatch(register(values));
+        const user = {
+            username: values.username,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            password: values.password,
+        }
+        dispatch(register(user as unknown as IUser));
     };
 
     const navigate = useNavigate();

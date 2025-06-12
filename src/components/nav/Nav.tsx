@@ -6,13 +6,18 @@ import {Tooltip} from "@mui/material";
 import LogoutIcon from '../../assets/icons/logout.svg';
 import HomeIcon from '../../assets/icons/home.svg';
 
+import { useNavigate } from 'react-router-dom';
+
+
 const Nav = () => {
     const {user} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
 
     const handleLogout = () =>{
         dispatch(logout());
         console.log("Log out success.")
+        navigate('/login', { replace: true });
     }
 
     return (
