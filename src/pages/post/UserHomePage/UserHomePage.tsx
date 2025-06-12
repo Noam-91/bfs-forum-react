@@ -1,21 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { mockPublishedPosts } from '../../../mock/posts.mock';
-import { Post } from '../../../shared/models/post.model';
+import { IPost } from '../../../shared/models/IPost';
 import styles from './UserHomePage.module.scss';
-import {postService} from '../../../components/post/service/post.service';
-
-
-// test function
-const testBackendConnection = async () => {
-    try{
-        console.log('Testing backend connection...');
-        const response = await postService.getPublishedPosts();
-        console.log('Success! Response:', response);
-    } catch(error){
-        console.error('Backend connection faile:', error);
-    }
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { getQueriedPosts } from '../../../redux/postSlice/post.thunks';
+import type { AppDispatch, RootState } from '../../../redux/store';
 
 type SortOption = 'latest' | 'mostReplies';
 // type FilterOption = 'all' | string; // 'all' or specific userId
@@ -23,40 +12,24 @@ type SortOption = 'latest' | 'mostReplies';
 const UserHomePage: React.FC = () => {
   const navigate = useNavigate();
 
+  const dispatch = useDispatch<AppDispatch>();
+  const postPage = useSelector((state: RootState) => state.post.postPage);
+  const status = useSelector((state: RootState) => state.post.status);
+  const error = useSelector((state: RootState) => state.post.error);
+
+
   // test connection - temporary
   useEffect(() => {
     // for test: fixed the USER
     localStorage.setItem('userId', 'test-user-id');
     localStorage.setItem('userRole', 'USER');
 
-    // setTimeout(() => {
-        loadPosts(0);
-    // }, 0);
-  }, []);
+    dispatch(getQueriedPosts({ page: 0, size: 3, sortBy: 'createdAt', sortDir: 'desc', status: 'PUBLISHED' }));
+  }, [dispatch]);
   
-//   useEffect(() => {
-//     const userId = localStorage.getItem('userId');
-//     const userRole = localStorage.getItem('userRole');
-
-//     if (!userId || !userRole) {
-//         // redirect to login or show error
-//         navigate('/login');
-//         return;
-//     }
-
-//     loadPosts(0);
-//     }, []);
-
 
   // init response data
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [originalPosts, setOriginalPosts] = useState<Post[]>([]);
   const [sortBy, setSortBy] = useState<SortOption>('latest');
-
-  // pagination
-  const [page, setPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  
   
   // Handle create post
   const handleCreatePost = () => {
@@ -69,65 +42,29 @@ const UserHomePage: React.FC = () => {
     sortPosts(e.target.value as SortOption);
   };
   
-
-  const loadPosts = async (pageToLoad = 0) => {
-    // // test
-    // try {
-    //   // pagination simulation
-    //   const pageSize = 3;
-    //   const start = pageToLoad * pageSize;
-    //   const end = start + pageSize;
-    //   const newPosts = mockPublishedPosts.slice(start, end);
-
-    //   if (pageToLoad === 0) {
-    //     setPosts(newPosts);
-    //   } else {
-    //     setPosts(prevPosts => [...prevPosts, ...newPosts]);
-    //   }
-
-    //   setPage(pageToLoad);
-    //   setHasMore(end < mockPublishedPosts.length);
-    // } catch (error) {
-    //   console.log('Failed to load mock posts:', error);
-    // }
-
-        try {
-            const response = await postService.getPublishedPosts(pageToLoad, 3, 'createdAt', 'desc');
-            const newPosts = response.content;
-            
-            if (pageToLoad === 0){
-                setPosts(newPosts);
-            } else {
-                // if loading subsequent pages, append to existing pages
-                setPosts(prevPosts => [...prevPosts, ...newPosts]);
-            }
-            
-            setPage(pageToLoad);
-            setHasMore(!response.last);
-        } catch (error){
-            console.log('Failed to load posts: ', error);
-        }
-    };
-  
   // Sort posts
 //   const sortPosts = (sortOption: SortOption) => {
 //     let sorted = [...posts];
-  const sortPosts = (sortOption: SortOption, basePosts: Post[] = posts) => {
+  const sortPosts = (sortOption: SortOption, basePosts: IPost[] = postPage?.content || []) => {
     let sorted = [...basePosts];
     if (sortOption === 'latest') {
       sorted.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        new Date(a.createdAt ?? 0).getTime() - new Date(b.createdAt ?? 0).getTime()
       );
     } else if (sortOption === 'mostReplies') {
       sorted.sort((a, b) => b.replyCount - a.replyCount);
     }
-    
-    setPosts(sorted);
   };
   
   // Format date
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
+  const formatDate = (dateInput?: Date): string => {
+    const date = dateInput instanceof Date ? dateInput : dateInput ? new Date(dateInput) : new Date();
+    // const date = dateInput
+    // ? dateInput instanceof Date
+    //   ? dateInput
+    //   : new Date(dateInput)
+    // : new Date(); // fallback to now if undefined
+
     const now = new Date();
     const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
     
@@ -171,7 +108,7 @@ const UserHomePage: React.FC = () => {
       
       {/* Posts List */}
       <div className={styles.postsList}>
-        {posts.length === 0 ? (
+        {postPage?.content?.length === 0 ? (
           <div className={styles.emptyState}>
             <p>No posts found.</p>
             <button 
@@ -182,17 +119,16 @@ const UserHomePage: React.FC = () => {
             </button>
           </div>
         ) : (
-          posts.map(post => (
+          postPage?.content?.map(post => (
             <div 
               key={post.id} 
               className={styles.postItem}
-              onClick={() => handlePostClick(post.id)}
+              onClick={() => handlePostClick(post.userInfo.id)}
             >
               <div className={styles.postContent}>
                 <h2 className={styles.postTitle}>{post.title}</h2>
                 <div className={styles.postMeta}>
-                  {/* by {post.userInfo.firstName} {post.userInfo.lastName} • {formatDate(post.createdAt)} • {post.replyCount} replies */}
-                  by • {formatDate(post.createdAt)} • {post.replyCount} replies
+                  by {post.userInfo.firstName ?? ''} {post.userInfo.lastName ?? ''} • {formatDate(post.createdAt)} • {post.viewCount} views
                 </div>
               </div>
               <div className={styles.postStats}>
@@ -203,11 +139,11 @@ const UserHomePage: React.FC = () => {
         )}
       </div>
     
-      {hasMore && (
+      {postPage && !postPage.last && (
         <div className={styles.loadMoreWrapper}>
             <button
                 className={styles.loadMoreButton}
-                onClick={() => loadPosts(page + 1)}
+                onClick={() => dispatch(getQueriedPosts({ page: postPage.number + 1, size: 3, sortBy: 'createdAt', sortDir: 'desc', status: 'PUBLISHED' }))}
             >
                 Next Page
             </button>

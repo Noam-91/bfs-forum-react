@@ -1,10 +1,13 @@
 import {configureStore} from "@reduxjs/toolkit";
-import userReducer from './userSlice/user.slice';
+import postReducer from './postSlice/post.slice.ts';
+import userReducer from './userSlice/user.slice.ts';
 
 const store = configureStore({
     reducer:{
         user: userReducer,
+        post: postReducer,
     },
+
     devTools: true,
     middleware: (getDefaultMiddleware)=>getDefaultMiddleware()
 })
