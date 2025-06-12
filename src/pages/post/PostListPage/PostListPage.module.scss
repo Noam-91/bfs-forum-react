@@ -1,4 +1,4 @@
-@import '../../../assets/css/post/_post.scss';
+@use '../../../assets/css/post/_post.scss' as *;
 
 .container {
   max-width: 1200px;

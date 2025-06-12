@@ -9,6 +9,7 @@ import PostListPage from './pages/post/PostListPage/PostListPage.tsx';
 import AuthGuard from './guards/AuthGuard.tsx';
 import AppLayout from './components/layout/post/AppLayout.tsx';
 import UserHomePage from './pages/post/UserHomePage/UserHomePage.tsx';
+import PostDetailPage from './pages/post/PostDetailPage/PostDetailPage.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -18,7 +19,7 @@ createRoot(document.getElementById('root')!).render(
                   {/*pages without Nav component*/}
                   <Route path="/*" element={<AppLayout />} >
                     <Route index element={<UserHomePage/>}/>
-                    <Route index element={<PostListPage/>}/>
+                    <Route index element={<PostDetailPage/>}/>
                     <Route path="posts/new" element={<PostFormPage mode="create"/>}/>
                     <Route path="posts/edit/:postId" element={<PostFormPage mode="edit"/>}/>
 

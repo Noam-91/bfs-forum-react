@@ -1,9 +1,11 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {useFormik} from 'formik';
-import { PostStatus } from '../../../shared/models/post.model'; 
+import {useNavigate} from 'react-router-dom';
+import { Post, PostStatus } from '../../../shared/models/post.model'; 
 import styles from './PostFormPage.module.scss'; 
 import { postFormValidationSchema, PostCreateFormValues, Attachment } from './postFormValidationSchema';
 import { uploadFileToS3 } from '../../../components/post/service/s3Upload';
+import { postService, CreatePostRequest } from '../../../components/post/service/post.service';
 
 interface PostFormPageProps {
   mode: 'create' | 'edit';
@@ -12,11 +14,13 @@ interface PostFormPageProps {
 
 const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
   const isEditMode = mode === 'edit';
+  const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // message
   const [message, setMessage] = useState<string | null>(null);
   const[isDragging, setIsDragging] = useState<boolean>(false);
+  const [isConnected, setIsConnected] = useState<boolean | null>(null);
 
   // different page titles and button next
   const pageTitle = isEditMode ? 'Edit Post' : 'Create New Post';
@@ -24,7 +28,6 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
   const draftButtonText = 'Save as Draft';
   const deleteButtonText = 'Delete Post';
 
-  
   // Get file icon based on type
   const getFileIcon = (mimeType: string) => {
     if (mimeType.startsWith('image/')) return '🖼️';
@@ -49,78 +52,87 @@ const PostFormPage: React.FC<PostFormPageProps> = ({mode, postId}) => {
     },
     validationSchema: postFormValidationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      setMessage(null); // clear previous message
-      setSubmitting(true); // status
+      setMessage(null); 
+      setSubmitting(true); 
 
       try {
         // API simulation
         // in practice, send request using PostCreateFormValues
         // for attachments, it might be necessary to handle them independently
         // then add the returned URL to post's data
-        const postData = {
+        const postData: Partial<Post> = {
           title: values.title,
           content: values.content,
-          // in practice, attachments would be URL or fileId
-          attachmentDetails: values.attachments?.map(att => ({
-            name: att.name,
-            size: att.size,
-            type: att.type,
-            // url: att.url // if the attachment has been uploaded
-          })),
-          // example, in practice it is from backend
-          userId: 1,
-          lastName: 'Test', 
-          firstName: 'John',
-          status: PostStatus.PUBLISHED, 
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          viewCount: 0,
-          replyCount: 0,
-          isArchived: false
+          attachments: values.attachments?.map(att => att.url)
         };
+        // const postData = {
+        //   title: values.title,
+        //   content: values.content,
+        //   // in practice, attachments would be URL or fileId
+        //   attachmentDetails: values.attachments?.map(att => ({
+        //     name: att.name,
+        //     size: att.size,
+        //     type: att.type,
+        //     // url: att.url // if the attachment has been uploaded
+        //   })),
+        //   // example, in practice it is from backend
+        //   userId: 1,
+        //   lastName: 'Test', 
+        //   firstName: 'John',
+        //   status: PostStatus.PUBLISHED, 
+        //   createdAt: new Date().toISOString(),
+        //   updatedAt: new Date().toISOString(),
+        //   viewCount: 0,
+        //   replyCount: 0,
+        //   isArchived: false
+        // };
 
-        console.log('Submitting Post Data:', postData);
+        // console.log('Submitting Post Data:', postData);
+        // const result = await postService.createPost(postData);
 
-        // simulating delay 
-        await new Promise(resolve => setTimeout(resolve, 1500));
-
-        setMessage(isEditMode ? 'Post updated successfully!' : 'Post created successfully!');
-        resetForm(); // reset form, attachments need to be reset independently
-        formik.setFieldValue('attachments', []); // manually clear
+        // if (result.success){
+        //   setMessage('Post created successfully!');
+        let result;
+        if (isEditMode && postId){
+          result = await postService.updatePost(postId, postData);
+          setMessage('Post updated successfully!');
+        } else {
+          result = await postService.createPost(postData as CreatePostRequest);
+          setMessage(`Post created successfully!`);
+          resetForm();
+          formik.setFieldValue('attachments', []);
+        } 
       } catch (error) {
-        console.error('Post operation failed:', error);
-        setMessage(`Failed to ${isEditMode ? 'update' : 'create'} post. Please try again.`);
+                console.error('Post submit failed:', error);
+        setMessage('❌ Failed to submit post');
       } finally {
         setSubmitting(false);
       }
     },
   });
 
-  // useEffect
+  // useEffect - testing
   useEffect(() => {
     if (isEditMode && postId) {
       // simulating loading posts from API
       // in practice, fetchPostById(postId)
       const loadPostData = async () => {
-        // simulation data
-        const mockPost = { 
-          id: postId,
-          title: 'Existing Post Title for ' + postId,
-          content: 'This is the content of the existing post. You can edit it now.',
-          // existing attachments
-          attachments: [
-            { id: 'att1', name: 'document.pdf', size: 123456, type: 'application/pdf', file: new File([], 'document.pdf') },
-            { id: 'att2', name: 'image.jpg', size: 789012, type: 'image/jpeg', file: new File([], 'image.jpg') },
-          ]
-        };
-
-        // set up formik values
-        // match initialValues' structure
-        formik.setValues({
-          title: mockPost.title,
-          content: mockPost.content,
-          attachments: mockPost.attachments,
-        });
+        try {
+          const post = await postService.getPostById(postId);
+          formik.setValues({
+            title: post.title,
+            content: post.content,
+            attachments: (post.attachments || []).map((url: string) => ({
+              id: url,
+              name: url.split('/').pop() || 'attachment',
+              size: 0,
+              type: '',
+              url,
+            }))
+          });
+        } catch (err) {
+          setMessage('⚠️ Failed to load post');
+        }
       };
       loadPostData();
     }

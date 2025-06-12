@@ -1,7 +1,7 @@
 // s3Upload.ts
 export const uploadFileToS3 = async (file: File): Promise<string> => {
   // 1. retrieve URL
-  const res = await fetch('/api/s3/presign', {
+  const res = await fetch('http://localhost:8080/s3/presign', {
     method: 'POST',
     body: JSON.stringify({
       filename: file.name,
