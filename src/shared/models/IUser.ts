@@ -11,6 +11,7 @@ export default interface IUser{
     firstName?: string;
     lastName?: string;
     imgUrl?: string;
+    avatarUrl?: string;
     createdAt?: string;
 }
 

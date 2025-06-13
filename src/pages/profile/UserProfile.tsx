@@ -5,7 +5,7 @@ import styles from './UserProfile.module.scss';
 import type { IPost } from '../../shared/models/IPost';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import PostItem from '../../pages/home/Home';
+import PostItem from '../../components/post-item/PostItem';
 import { getQueriedPosts } from '../../redux/postSlice/post.thunks'; // assume this exists
 import History from '../history/History';
 
@@ -71,7 +71,12 @@ const UserProfile: React.FC = () => {
         <h3>Top 3 Most Replied Posts</h3>
         {publishedPosts.length > 0 ? (
             publishedPosts.map((post: IPost) => (
-                <PostItem key={post.id} post={post} />
+                <PostItem key={post.id} 
+                  post={post} 
+                  left0="author"
+                  left1="createdAt"
+                  right="replyCount"
+                />
             ))
             ) : (
             <p>No posts yet.</p>
@@ -82,7 +87,13 @@ const UserProfile: React.FC = () => {
         <h3>Drafts</h3>
         {drafts.length > 0 ? (
             drafts.map((post: IPost) => (
-                <PostItem key={post.id} post={post} />
+                <PostItem
+                  key={post.id}
+                  post={post}
+                  left0="author"
+                  left1="createdAt"
+                  right="replyCount"
+                />
             ))
             ) : (
             <p>No drafts available.</p>
