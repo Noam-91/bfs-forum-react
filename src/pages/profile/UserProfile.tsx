@@ -5,7 +5,7 @@ import styles from './UserProfile.module.scss';
 import type { IPost } from '../../shared/models/IPost';
 import { Button } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
-import PostItem from '../home/PostItem';
+import PostItem from '../../pages/home/Home';
 import { getQueriedPosts } from '../../redux/postSlice/post.thunks'; // assume this exists
 import History from '../history/History';
 
