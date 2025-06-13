@@ -1,37 +1,20 @@
-<<<<<<< HEAD
 // IUser.ts
-=======
+export type Role =  "VISITOR"|"UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
 
->>>>>>> 20172410e72a88cf47c0ba674c02aeda497df803
+
 export default interface IUser{
-    avatarUrl: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    id?:string,
-    username:string,
-    password?:string,
-    role:Role,
-    isActive:boolean
-    createdAt?: string
+    id: string;
+    username: string;
+    password?: string;
+    role: Role;
+    isActive: boolean;
+    firstName?: string;
+    lastName?: string;
+    imgUrl?: string;
+    createdAt?: string;
 }
-
 
 export interface ILoginFormData {
     username:string,
     password:string
 }
-
-export type Role =  "VISITOR"|"UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
-
-// export default interface IUser{
-//     avatarUrl: string | undefined;
-//     id: string;
-//     username: string;
-//     role: Role;
-//     isActive: boolean;
-//     firstName?: string;
-//     lastName?: string;
-//     imgUrl?: string;
-//     createdAt?: string;
-// }
