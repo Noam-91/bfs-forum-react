@@ -5,15 +5,14 @@ import {getQueriedPosts} from "../../redux/postSlice/post.thunks.ts";
 import {useNavigate, useParams} from "react-router-dom";
 import styles from './Home.module.scss';
 import PostItem from "../../components/post-item/PostItem.tsx";
-import {useAlert} from "../../components/alert/AlertHook.tsx";
 
 const Home = () => {
     const dispatch = useAppDispatch();
     const navigate  = useNavigate();
     const {page} = useParams();
-    const {postPage, status, error } = useAppSelector((state) => state.post);
+    const {postPage, status} = useAppSelector((state) => state.post);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [searchBy, setSearchBy] = useState<'title' | 'content' | 'author'>('title');
+    const [searchBy, setSearchBy] = useState<'title' | 'content'>('title');
 
     /** Initialize */
     useEffect(() => {
@@ -39,18 +38,6 @@ const Home = () => {
         //testOnly: no post list page implemented yet.
         navigate('/posts', { state: { searchParams } });
     };
-
-    /** Alert */
-    const {showAlert} = useAlert();
-    useEffect(() => {
-        if (status === 'failed') {
-            showAlert('error', 'Error', error || 'Failed to fetch posts.');
-            const timer = setTimeout(() => {
-                // dispatch(resetContactStatus());
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [status, error, dispatch]);
 
     /** PostItem prep */
     type positionParams = {
@@ -80,7 +67,7 @@ const Home = () => {
                 />
                 <select
                     value={searchBy}
-                    onChange={(e) => setSearchBy(e.target.value as 'title' | 'content' | 'author')}
+                    onChange={(e) => setSearchBy(e.target.value as 'title' | 'content')}
                     className={styles.searchSelect}
                 >
                     <option value="title">Title</option>

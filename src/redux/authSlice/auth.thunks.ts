@@ -10,6 +10,7 @@ export const login = createAsyncThunk(
         console.log('login action: ', loginForm);
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/login`, loginForm,{withCredentials:true});
+            await thunkAPI.dispatch(checkAuth());
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }
@@ -21,6 +22,7 @@ export const logout = createAsyncThunk(
     async (_,thunkAPI) => {
         try{
             await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/logout`,null,{withCredentials:true});
+            await thunkAPI.dispatch(checkAuth());
         } catch (error: unknown) { // Good: using unknown
             return handleThunkAxiosError(error, thunkAPI);
         }

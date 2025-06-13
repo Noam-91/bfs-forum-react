@@ -16,7 +16,14 @@ const authSlice = createSlice({
         status: 'idle',
         error: null
     } as IUserState,
-    reducers: {},
+    reducers: {
+        resetStatusAndError: (state) => {
+            setTimeout(() => {
+                state.status = 'idle';
+                state.error = null;
+            }, 1000);
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(login.pending, (state) => {

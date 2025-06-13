@@ -13,7 +13,12 @@ const Login = () => {
     const navigate = useNavigate();
     const { showAlert } = useAlert();
     const isLoggedIn = useAppSelector(selectIsLoggedIn);
-    const userRole = useAppSelector(selectUserRole);
+
+    useEffect(() => {
+        if (isLoggedIn) {
+            navigate('/');
+        }
+    }, [isLoggedIn, navigate]);
 
     const initialValues = {
         username: '',
@@ -33,18 +38,13 @@ const Login = () => {
         const resultAction = await dispatch(login(values));
 
         if (login.fulfilled.match(resultAction)) {
-            await dispatch(checkAuth()); // 等 login 成功后才调用
+            showAlert('success', 'Login Successful', 'Welcome back!');
+            navigate('/');
         } else {
             showAlert('error', 'Login Failed', 'Invalid username or password');
         }
     };
-    useEffect(() => {
-        console.log('isLoggedIn:', isLoggedIn, 'role:', userRole);
-        if (isLoggedIn) {
-            showAlert('success', 'Login', 'Login successful!');
-            navigate('/');
-        }
-    }, [isLoggedIn, userRole, navigate, showAlert]);
+
 
     return (
         <div className="login-container">

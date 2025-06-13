@@ -6,23 +6,31 @@ import {Tooltip} from "@mui/material";
 
 import { useNavigate } from 'react-router-dom';
 import {useEffect} from "react";
+import {useAlert} from "../alert/AlertHook.tsx";
 
 
 const Nav = () => {
-    const {user} = useAppSelector((state) => state.auth);
+    const {user,status} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const {showAlert} = useAlert();
 
     useEffect(() => {
-        if(!user) dispatch(checkAuth())
-    }, [user,dispatch]);
+        if (!user && status === 'idle') {
+            dispatch(checkAuth());
+        }
+    }, [user, status, dispatch]);
 
-    const handleLogout = () =>{
-        dispatch(logout());
-        dispatch(checkAuth());
-        console.log("Log out success.")
-        navigate('/login', { replace: true });
-    }
+    const handleLogout = async () => {
+        const resultAction = await dispatch(logout());
+
+        if (logout.fulfilled.match(resultAction)) {
+            showAlert('success', 'Logout','See you next time.');
+            navigate('/login');
+        } else {
+            console.error("Logout failed.");
+        }
+    };
 
 
     return (
@@ -43,7 +51,7 @@ const Nav = () => {
 
             <div onClick={ handleLogout }>
                 <Tooltip
-                        className={styles.navLogout} title={"Logout"} onClick={handleLogout}>
+                        className={styles.navLogout} title={"Logout"}>
                     <LogoutIcon />
                 </Tooltip>
             </div>
