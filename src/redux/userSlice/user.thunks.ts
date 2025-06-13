@@ -22,7 +22,6 @@ export const verifyEmail = createAsyncThunk(
         }
     }
 );
-<<<<<<< HEAD
 
 
 export const getUserProfile = createAsyncThunk<
@@ -116,5 +115,3 @@ const buildParams = (params: GetAllUsersParams): string => {
         .join('&');
     return query ? `?${query}` : '';
 };
-=======
->>>>>>> 20172410e72a88cf47c0ba674c02aeda497df803
