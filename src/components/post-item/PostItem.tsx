@@ -3,7 +3,7 @@ import styles from './PostItem.module.scss';
 import {getTimeAgo} from "../../shared/utils/formatter.ts";
 import {useNavigate} from "react-router-dom";
 
-
+//PostItem.tsx
 interface PostProps {
     left0: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt';
     left1: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt';

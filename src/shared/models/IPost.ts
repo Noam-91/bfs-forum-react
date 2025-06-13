@@ -1,3 +1,4 @@
+//IPost.ts
 export interface IPost {
     id?: string;
     userInfo: IUserInfo;

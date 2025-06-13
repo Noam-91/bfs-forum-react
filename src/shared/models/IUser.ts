@@ -1,4 +1,6 @@
+// IUser.ts
 export type Role =  "VISITOR"|"UNVERIFIED" | "USER" | "ADMIN" | "SUPER_ADMIN";
+
 
 export default interface IUser{
     id: string;
@@ -9,6 +11,7 @@ export default interface IUser{
     firstName?: string;
     lastName?: string;
     imgUrl?: string;
+    avatarUrl?: string;
     createdAt?: string;
 }
 

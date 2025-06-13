@@ -6,12 +6,15 @@ import {
     replyPost,
     transferPostStatus,
     toggleReplyActive, getQueriedPosts,
+    getAllPosts,
 } from './post.thunks.ts';
 import type {Page} from "../../shared/models/Page.ts";
 import type {IPost} from "../../shared/models/IPost.ts";
 import type IErrorResponse from "../../shared/models/IErrorResponse.ts";
 
+//post.slice.ts
 interface IPostsState {
+    allPosts: IPost[];
     postPage: Page<IPost> | null;
     currentPost: IPost | null;
     status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -23,7 +26,9 @@ const initialState: IPostsState = {
     currentPost: null,
     status: 'idle',
     error: null,
+    allPosts: []
 };
+
 
 const postSlice = createSlice({
     name: 'posts', // The name of the slice
@@ -31,6 +36,14 @@ const postSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(getAllPosts.fulfilled, (state, action) => {
+                if (Array.isArray(action.payload)) {
+                    state.allPosts = action.payload;
+                } else {
+                    state.allPosts = [];
+                    console.warn("Unexpected payload in getAllPosts:", action.payload);
+                }
+            })
             // --- getQueriedPosts ---
             .addCase(getQueriedPosts.pending, (state) => {
                 state.status = 'loading';
