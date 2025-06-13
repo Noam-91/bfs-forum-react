@@ -54,8 +54,11 @@ const PostItem = ({ post, left0, left1, left2, right, viewAt}:PostProps) => {
                   <span>{infoMap[left0]}</span>
                   •
                   <span>{infoMap[left1]}</span>
-                  (left2&&<span>•</span>
-                  <span>{infoMap[left2!]}</span>)
+                  {left2 &&
+                  <>
+                      <span>•</span>
+                      <span>{infoMap[left2]}</span>
+                  </>}
 
               </div>
           </div>

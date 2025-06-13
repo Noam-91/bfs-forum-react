@@ -7,7 +7,6 @@ import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 export const login = createAsyncThunk(
     'auth/login',
     async (loginForm: ILoginFormData, thunkAPI) => {
-        console.log('login action: ', loginForm);
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/login`, loginForm,{withCredentials:true});
             await thunkAPI.dispatch(checkAuth());
