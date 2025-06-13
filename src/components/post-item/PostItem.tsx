@@ -2,6 +2,7 @@ import type {IPost} from "../../shared/models/IPost.ts";
 import styles from './PostItem.module.scss';
 import {getTimeAgo} from "../../shared/utils/formatter.ts";
 import {useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../redux/hooks.ts";
 
 //PostItem.tsx
 interface PostProps {
@@ -20,6 +21,7 @@ const PostItem = ({ post, left0, left1, left2, right, viewAt}:PostProps) => {
     const replyCount = post.replyCount !== undefined ? post.replyCount : 0;
     const timeAgo:string = getTimeAgo(post.createdAt!);
     const navigate = useNavigate();
+    const {user} = useAppSelector(state => state.auth);
 
     const infoMap: Record<string, string | React.ReactNode> = { // Changed to React.ReactNode for icons
         'author': author,
@@ -41,7 +43,7 @@ const PostItem = ({ post, left0, left1, left2, right, viewAt}:PostProps) => {
 
     // Navigate to post detail
     const handlePostClick = (postId: string) => {
-        navigate(`/posts/${postId}`);
+        navigate(user?.role==="ADMIN"||user?.role==="SUPER_ADMIN"?`/posts/${postId}`:`/post/${postId}`);
     };
   return (
       <div

@@ -10,7 +10,7 @@ import {useAlert} from "../alert/AlertHook.tsx";
 
 
 const Nav = () => {
-    const {user, status} = useAppSelector((state) => state.auth);
+    const {user,status} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const {showAlert} = useAlert();
@@ -51,7 +51,7 @@ const Nav = () => {
 
             <div onClick={ handleLogout }>
                 <Tooltip
-                        className={styles.navLogout} title={"Logout"} onClick={handleLogout}>
+                        className={styles.navLogout} title={"Logout"}>
                     <LogoutIcon />
                 </Tooltip>
             </div>
@@ -66,10 +66,12 @@ const Nav = () => {
             <ul className={styles.navDropdown}>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/posts">Posts</Link></li>
-                {status === 'succeeded' && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+                <li><Link to="/user/posts">My Posts</Link></li>
+                {(user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
                     <>
                         <li><Link to="/admin/users">User Management</Link></li>
                         <li><Link to="/admin/messages">Message Management</Link></li>
+
                     </>
                 )}
             </ul>
@@ -98,13 +100,4 @@ const LogoutIcon = () => (
         <polyline points="16 17 21 12 16 7"></polyline>
         <line x1="21" y1="12" x2="9" y2="12"></line>
     </svg>
-    // <svg
-    //     className={styles.navLogout}
-    //     xmlns="http://www.w3.org/2000/svg"
-    //     viewBox="0 0 24 24"
-    //     fill="currentColor"
-    // >
-    //     <path
-    //         d="M17 7L15.59 8.41 18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-    // </svg>
 );

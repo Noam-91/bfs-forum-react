@@ -2,8 +2,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import {checkAuth, login} from '../../redux/authSlice/auth.thunks.ts';
-import { selectIsLoggedIn , selectUserRole} from '../../redux/authSlice/auth.slice';
+import {login} from '../../redux/authSlice/auth.thunks.ts';
+import { selectIsLoggedIn} from '../../redux/authSlice/auth.slice';
 import { useAlert } from '../../components/alert/AlertHook';
 import {useEffect} from "react";
 import './Login.css';
@@ -67,6 +67,11 @@ const Login = () => {
                     </Form>
                 </Formik>
                 <a href="/register" className="login-link">No account yet? Register one</a>
+                <br/>
+                <div style={{marginTop:30}}>
+
+                    <a href="/contact">Talk to Administrators</a>
+                </div>
             </div>
         </div>
     );

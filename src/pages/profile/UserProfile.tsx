@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PostItem from '../../components/post-item/PostItem';
 import { getQueriedPosts } from '../../redux/postSlice/post.thunks'; // assume this exists
 import History from '../history/History';
+import {getTimeAgo} from "../../shared/utils/formatter.ts";
 
 
 const UserProfile: React.FC = () => {
@@ -31,43 +32,43 @@ const UserProfile: React.FC = () => {
             size: 3, // 只查最多3条
         }));
 
-        // 加载用户 UNPUBLISHED 草稿
-        dispatch(getQueriedPosts({
-            userId,
-            status: 'UNPUBLISHED',
-            sortBy: 'createdAt',
-            sortDir: 'desc',
-        }));
+        // // 加载用户 UNPUBLISHED 草稿
+        // dispatch(getQueriedPosts({
+        //     userId,
+        //     status: 'UNPUBLISHED',
+        //     sortBy: 'createdAt',
+        //     sortDir: 'desc',
+        // }));
     }, [dispatch, userId]);
 
 
    
     const publishedPosts: IPost[] = useAppSelector(state =>
-    (state.post.allPosts || [])
+    (state.post?.postPage?.content || [])
         .filter(post => post.status === 'PUBLISHED')
         .sort((a, b) => b.replyCount - a.replyCount)
         .slice(0, 3)
     );
 
-    const drafts: IPost[] = useAppSelector(state =>
-    (state.post.allPosts || [])
-        .filter(post => post.status === 'UNPUBLISHED')
-    );
+    // const drafts: IPost[] = useAppSelector(state =>
+    // (state.post.allPosts || [])
+    //     .filter(post => post.status === 'UNPUBLISHED')
+    // );
 
   if (!user) return <div>Loading...</div>;
 
   return (
     <div className={styles.container}>
       <section className={styles.profile}>
-        <img src={user.avatarUrl} alt="Avatar" className={styles.avatar} />
+        <img src={user.imgUrl} alt="Avatar" className={styles.avatar} width={50} height={50}/>
         <h2>{user.firstName} {user.lastName}</h2>
-        <p>Registered on: {new Date(user.createdAt!).toLocaleDateString()}</p>
+        <p>Registered : {getTimeAgo(user.createdAt!)}</p>
         <Button variant="outlined" onClick={() => navigate(`/edit-profile/${user.id}`)}>
           Edit Profile
         </Button>
       </section>
 
-      <section className={styles.topPosts}>
+      <section className={styles.topPosts} style={{padding: '20px'}}>
         <h3>Top 3 Most Replied Posts</h3>
         {publishedPosts.length > 0 ? (
             publishedPosts.map((post: IPost) => (
@@ -83,22 +84,22 @@ const UserProfile: React.FC = () => {
             )}
         </section>
 
-        <section className={styles.drafts}>
-        <h3>Drafts</h3>
-        {drafts.length > 0 ? (
-            drafts.map((post: IPost) => (
-                <PostItem
-                  key={post.id}
-                  post={post}
-                  left0="author"
-                  left1="createdAt"
-                  right="replyCount"
-                />
-            ))
-            ) : (
-            <p>No drafts available.</p>
-            )}
-        </section>
+        {/*<section className={styles.drafts}>*/}
+        {/*<h3>Drafts</h3>*/}
+        {/*{drafts.length > 0 ? (*/}
+        {/*    drafts.map((post: IPost) => (*/}
+        {/*        <PostItem*/}
+        {/*          key={post.id}*/}
+        {/*          post={post}*/}
+        {/*          left0="author"*/}
+        {/*          left1="createdAt"*/}
+        {/*          right="replyCount"*/}
+        {/*        />*/}
+        {/*    ))*/}
+        {/*    ) : (*/}
+        {/*    <p>No drafts available.</p>*/}
+        {/*    )}*/}
+        {/*</section>*/}
 
       <section className={styles.historySection}>
         <h3>Recently Viewed Posts</h3>

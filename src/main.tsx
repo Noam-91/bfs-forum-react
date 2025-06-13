@@ -13,9 +13,14 @@ import Contact from "./pages/contact/Contact.tsx";
 import EditProfile from './pages/editProfile/EditProfile.tsx';
 import Login from './pages/auth/Login.tsx';
 import Register from './pages/auth/Register.tsx';
-import UserManager from './pages/admin/UserManager.tsx';
 import UserProfile from './pages/profile/UserProfile.tsx';
 import Home from './pages/home/Home.tsx';
+import UserManagement from "./pages/admin/UserManagement.tsx";
+import MessageManagement from "./pages/admin/MessageManagement.tsx";
+import PostDetailPage from "./pages/post/PostDetailPage/PostDetailPage.tsx";
+import UserHomePage from "./pages/post/UserHomePage/UserHomePage.tsx";
+import PostFormPage from "./pages/post/PostFormPage/PostFormPage.tsx";
+import UserPosts from "./pages/user-posts/userPosts.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -28,11 +33,15 @@ createRoot(document.getElementById('root')!).render(
             <Route path="/contact" element={<Contact />} />
             <Route path="/" element={<App />}>
               <Route element={<AuthGuard />}>
-                <Route index element={<Home />}/>
-                <Route path="admin/users" element={<UserManager />} />
-                
+                <Route index element={<UserHomePage />}/>
+                <Route path={"posts/new"} element={<PostFormPage/>}/>
+                <Route path="admin/users" element={<UserManagement />} />
+                <Route path="admin/messages" element={<MessageManagement />} />
+                <Route path="/user/posts" element={<UserPosts />} />
+
                 <Route path="/posts" element={<PanelWrapper />} />
                 <Route path="/posts/:postId" element={<PostDetailAdmin />} />
+                <Route path={"post/:postId"} element={<PostDetailPage/>} />
 
                 <Route path="/edit-profile/:id" element={<EditProfile />} />
 

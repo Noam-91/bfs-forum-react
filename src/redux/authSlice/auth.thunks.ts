@@ -29,12 +29,12 @@ export const logout = createAsyncThunk(
     }
 );
 
-export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unknown}>(
+export const checkAuth = createAsyncThunk(
     'auth/checkAuth',
     async (_, thunkAPI) => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/auth`, {withCredentials:true});
-            const user: IUser = response.data.user;
+            const user: IUser = response.data;
             sessionStorage.setItem('role', user.role);
             return { user };
         } catch (error) {

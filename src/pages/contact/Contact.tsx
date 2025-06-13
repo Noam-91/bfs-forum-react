@@ -131,6 +131,7 @@ const Contact = () => {
                 >
                     {status === 'loading' ? 'Sending...' : 'Send Message'}
                 </button>
+                <a href="/login">Back to login</a>
             </form>
 
         </div>

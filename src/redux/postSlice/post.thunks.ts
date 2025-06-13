@@ -27,6 +27,7 @@ export const getQueriedPosts = createAsyncThunk<
     'posts/getPostPage',
     async (params: IPostQueryParameters, thunkAPI) => {
         try {
+            console.log(params)
             const queryString = buildQueryParams(params);
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/posts${queryString}`, {withCredentials:true});
             return response.data;

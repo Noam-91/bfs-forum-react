@@ -1,0 +1,249 @@
+@use "sass:color";
+@use '../../../assets/css/post/_post.scss' as *;
+
+.container {
+  max-width: 800px; 
+  margin: 0 auto;
+  padding: $spacing-lg;
+  background-color: $color-white;
+  min-height: 100vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); // add shadow effect
+  border-radius: $border-radius;
+}
+
+.header {
+  margin-bottom: $spacing-xl;
+  text-align: center;
+}
+
+.title {
+  font-size: $font-size-xl; // user variable?
+  font-weight: 600;
+  color: $color-text;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md; // distance between forms
+}
+
+.formGroup {
+  margin-bottom: $spacing-sm;
+}
+
+.label {
+  display: block; // label occupies one row
+  margin-bottom: $spacing-xs;
+  font-weight: 500;
+  color: $color-text-secondary;
+  font-size: $font-size-base;
+}
+
+.input {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  border: $border-width solid $color-border;
+  border-radius: $border-radius;
+  font-size: $font-size-base;
+  color: $color-text;
+  box-sizing: border-box; 
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.2);
+  }
+
+  &::placeholder {
+    color: $color-text-secondary;
+  }
+}
+
+.textarea {
+  resize: vertical; 
+  min-height: 100px;
+}
+
+.inputError {
+  border-color: $color-danger !important; // Important to override default input border on error
+}
+
+.errorText {
+  color: $color-danger;
+  font-size: $font-size-sm;
+  margin-top: $spacing-xs;
+}
+// Additional styles for PostCreatePage.module.scss
+/* File Upload Styles */
+.uploadArea {
+  border: 2px dashed $color-border;
+  border-radius: $border-radius;
+  padding: $spacing-lg;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  background-color: color.adjust($color-bg, $lightness: 3%); // Use color.adjust
+  color: $color-text-secondary;
+
+  &:hover {
+    border-color: $color-primary;
+    background-color: color.adjust($color-bg, $lightness: -2%); // Use color.adjust
+  }
+
+  &.dragging {
+    border-color: $color-primary;
+    background-color: color.adjust($color-primary, $lightness: 40%); // Use color.adjust
+  }
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadText {
+  font-size: $font-size-base;
+  line-height: 1.5;
+}
+
+.uploadHint {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  display: block;
+  margin-top: $spacing-xs;
+}
+
+.attachmentList {
+  margin-top: $spacing-md;
+  border: $border-width solid $color-border;
+  border-radius: $border-radius;
+  padding: $spacing-sm;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+.attachmentItem {
+  display: flex;
+  align-items: center;
+  background-color: $color-bg;
+  border: $border-width solid $color-border;
+  border-radius: $border-radius;
+  padding: $spacing-xs $spacing-sm;
+  font-size: $font-size-sm;
+  color: $color-text;
+  gap: $spacing-xs;
+}
+
+.fileIcon {
+  font-size: $font-size-lg;
+}
+
+.fileName {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.fileSize {
+  color: $color-text-secondary;
+  margin-left: $spacing-xs;
+}
+
+.removeButton {
+  background: none;
+  border: none;
+  color: $color-danger;
+  font-size: $font-size-lg;
+  cursor: pointer;
+  padding: 0 $spacing-xs;
+  line-height: 1;
+  transition: color 0.2s;
+
+  &:hover {
+    color: color.adjust($color-danger, $lightness: -10%); // Use color.adjust
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+/* Action buttons */
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: $spacing-sm $spacing-lg;
+  border: none;
+  border-radius: $border-radius;
+  font-size: $font-size-lg;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+}
+
+.primaryButton {
+  background-color: $color-primary;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-primary, $lightness: -10%); // Use color.adjust
+  }
+}
+
+.secondaryButton {
+  background-color: $color-secondary;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-secondary, $lightness: -10%); // Use color.adjust
+  }
+}
+
+.dangerButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.dangerButton:hover {
+  background-color: #c82333;
+}
+
+.message {
+  padding: $spacing-sm;
+  border-radius: $border-radius;
+  text-align: center;
+  font-size: $font-size-base;
+  margin-bottom: $spacing-md;
+
+  &.success {
+    background-color: color.adjust($color-success, $lightness: 40%);
+    color: $color-success;
+    border: $border-width solid $color-success;
+  }
+
+  &.error {
+    background-color: color.adjust($color-danger, $lightness: 40%);
+    color: $color-danger;
+    border: $border-width solid $color-danger;
+  }
+}

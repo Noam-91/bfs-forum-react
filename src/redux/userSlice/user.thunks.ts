@@ -41,7 +41,7 @@ export const updateProfile = createAsyncThunk(
     'users/updateProfile',
     async (user:IUser, thunkAPI) => {
         try {
-            await axios.put(`http://localhost:8080/users/${user.id}/profile`, {withCredentials:true});
+            await axios.put(`http://localhost:8080/users/${user.id}/profile`, user,{withCredentials:true});
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }

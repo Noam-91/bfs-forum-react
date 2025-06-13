@@ -4,10 +4,11 @@ import { Button, TextField } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { getUserProfile } from '../../redux/userSlice/user.thunks';
+import {getUserProfile, updateProfile} from '../../redux/userSlice/user.thunks';
+import {uploadFile} from "../../shared/utils/upload.ts";
+import type IUser from "../../shared/models/IUser.ts";
 
 
-//EditProfile.tsx
 const EditProfile: React.FC = () => {
   const { userId } = useParams(); // assuming route like /edit-profile/:userId
   const dispatch = useAppDispatch();
@@ -27,8 +28,8 @@ const EditProfile: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      setNewFirstName(user.firstName);
-      setNewLastName(user.lastName);
+      setNewFirstName(user.firstName!);
+      setNewLastName(user.lastName!);
     }
   }, [user]);
 
@@ -45,15 +46,21 @@ const EditProfile: React.FC = () => {
     }
   };
 
-  const handleSave = () => {
-    const update: { firstName?: string; lastName?: string; avatarFile?: File } = {};
-    if (newFirstName.trim() && newFirstName !== user?.firstName) update.firstName = newFirstName.trim();
-    if (newLastName.trim() && newLastName !== user?.lastName) update.lastName = newLastName.trim();
-    if (avatarFile) update.avatarFile = avatarFile;
-    if (Object.keys(update).length > 0) {
-      // TODO: dispatch updateUserProfile(update)
-      console.log('Saving:', update);
+  const handleSave = async () => { // Mark handleSave as async
+    const newUserProfile = { ...user, firstName: newFirstName.trim(), lastName: newLastName.trim() };
+
+    if (avatarFile) {
+      const publicUrl = await uploadFile(avatarFile);
+      console.log('publicUrl:', publicUrl);
+
+      if (publicUrl !== undefined) {
+        newUserProfile.imgUrl = publicUrl;
+      } else {
+        console.error("Avatar file upload failed, public URL is undefined.");
+      }
     }
+    dispatch(updateProfile(newUserProfile as IUser));
+
   };
 
   if (!user) return <div>Loading...</div>;
@@ -108,7 +115,7 @@ const EditProfile: React.FC = () => {
           />
           <TextField
             label="Email"
-            value={user.email}
+            value={user.username}
             fullWidth
             margin="normal"
             disabled

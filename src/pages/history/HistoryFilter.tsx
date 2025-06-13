@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import styles from './History.module.scss';
 
-//HistoryFilter.tsx
+
 interface HistoryParams {
     keyword?: string;
     startDate?: string;

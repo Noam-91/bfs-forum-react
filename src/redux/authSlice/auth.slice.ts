@@ -59,7 +59,7 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(checkAuth.fulfilled, (state, action) => {
-                state.user = action.payload.user;
+                state.user = action.payload.user as unknown as IUser;
                 state.status = 'succeeded';
                 state.error = null;
             })

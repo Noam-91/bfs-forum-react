@@ -80,7 +80,7 @@ const PostDetailAdmin: React.FC = () => {
   const DEFAULT_AVATAR = "/assets/tree-sky.jpg";
   const AvatarDisplay = () => (
     <img
-      src={DEFAULT_AVATAR}
+      src={post?.userInfo.imgUrl}
       alt="avatar"
       className={styles.avatarSmall}
       onClick={() => setAvatarPreview(DEFAULT_AVATAR)}
@@ -121,7 +121,7 @@ const PostDetailAdmin: React.FC = () => {
 
       <Card className={styles.adminCard}>
         <CardContent>
-          <Typography variant="h6">Post Content</Typography>
+          <Typography variant="h5">Content</Typography>
           <Collapse in={expanded} collapsedSize={100}>
             <Typography>{post.content}</Typography>
           </Collapse>

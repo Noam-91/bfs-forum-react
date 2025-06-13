@@ -1,0 +1,201 @@
+.postDetail {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+
+  .navActions {
+    display: flex;
+    gap: 12px;
+  }
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+  background-color: #ffebee;
+  border-radius: 8px;
+  border: 1px solid #ffcdd2;
+}
+
+.postCard {
+  margin-bottom: 24px;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+.postHeader {
+  margin-bottom: 20px;
+
+  .authorInfo {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+
+    .avatar {
+      width: 56px !important;
+      height: 56px !important;
+      background-color: #1976d2 !important;
+      font-size: 24px !important;
+      font-weight: 600;
+    }
+  }
+}
+
+.postContent {
+  margin: 24px 0;
+  line-height: 1.7;
+  font-size: 16px;
+  color: #333;
+}
+
+.attachments {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+
+  .attachmentItem {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 8px 0;
+
+    .attachmentLink {
+      color: #1976d2;
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.replySection {
+  margin-bottom: 24px;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+
+  .replyInput {
+    margin: 16px 0 !important;
+  }
+
+  .replyActions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+  }
+}
+
+.repliesList {
+  h6 {
+    margin-bottom: 16px;
+    color: #333;
+    font-weight: 600;
+  }
+}
+
+.replyCard {
+  margin-bottom: 12px !important;
+  border-radius: 8px !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
+  border-left: 3px solid #1976d2 !important;
+}
+
+.replyHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 12px;
+
+  .replyAvatar {
+    width: 32px !important;
+    height: 32px !important;
+    background-color: #757575 !important;
+    font-size: 14px !important;
+  }
+
+  .replyInfo {
+    flex: 1;
+  }
+
+  .deleteReplyBtn {
+    margin-left: auto;
+    min-width: auto !important;
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+  }
+}
+
+.replyContent {
+  margin-left: 44px;
+  line-height: 1.6;
+  color: #555;
+}
+
+// 响应式设计
+@media (max-width: 768px) {
+  .postDetail {
+    padding: 12px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+
+    .navActions {
+      justify-content: center;
+    }
+  }
+
+  .postHeader .authorInfo {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+
+    .avatar {
+      align-self: center;
+    }
+  }
+
+  .replyHeader {
+    flex-wrap: wrap;
+    gap: 8px;
+
+    .deleteReplyBtn {
+      margin-left: 0;
+      align-self: flex-end;
+    }
+  }
+}
+
+// 动画效果
+.postCard, .replyCard, .replySection {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  }
+}
