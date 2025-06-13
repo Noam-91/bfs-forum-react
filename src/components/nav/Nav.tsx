@@ -10,7 +10,7 @@ import {useAlert} from "../alert/AlertHook.tsx";
 
 
 const Nav = () => {
-    const {user,status} = useAppSelector((state) => state.auth);
+    const {user, status} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const {showAlert} = useAlert();
@@ -51,7 +51,7 @@ const Nav = () => {
 
             <div onClick={ handleLogout }>
                 <Tooltip
-                        className={styles.navLogout} title={"Logout"}>
+                        className={styles.navLogout} title={"Logout"} onClick={handleLogout}>
                     <LogoutIcon />
                 </Tooltip>
             </div>
@@ -66,6 +66,12 @@ const Nav = () => {
             <ul className={styles.navDropdown}>
                 <li><Link to="/contact">Contact</Link></li>
                 <li><Link to="/posts">Posts</Link></li>
+                {status === 'succeeded' && (user?.role === 'ADMIN' || user?.role === 'SUPER_ADMIN') && (
+                    <>
+                        <li><Link to="/admin/users">User Management</Link></li>
+                        <li><Link to="/admin/messages">Message Management</Link></li>
+                    </>
+                )}
             </ul>
         </div>
     </nav>

@@ -18,11 +18,10 @@ interface ISort {
     unsorted: boolean;
 }
 
-interface IPageable {
-    pageNumber: number;
-    pageSize: number;
-    offset: number;
-    paged: boolean;
-    unpaged: boolean;
-    sort: ISort;
+export interface PaginatedMessageResponse {
+    content: IMessage[];
+    totalPages: number;
+    totalElements: number;
+    number: number;
+    size: number;
 }

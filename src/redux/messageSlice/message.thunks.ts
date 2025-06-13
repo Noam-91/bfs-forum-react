@@ -1,7 +1,7 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 import axios from "axios";
-import type {ContactFormData} from "../../shared/models/IMessage.ts";
+import type {ContactFormData, PaginatedMessageResponse} from "../../shared/models/IMessage.ts";
 
 export const sendMessage = createAsyncThunk(
     'messages/send',
@@ -17,15 +17,21 @@ export const sendMessage = createAsyncThunk(
 
 export const getAllMessages = createAsyncThunk(
     'messages/getAll',
-    async (_, thunkAPI) => {
+    async ({ page, size }: { page: number; size: number }, thunkAPI) => {
         try {
-            const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/messages`, {withCredentials:true});
+            const response = await axios.get<PaginatedMessageResponse>(
+                `${import.meta.env.VITE_BACKEND_API}/messages`,
+                {
+                    params: { page, size },
+                    withCredentials: true
+                }
+            );
             return response.data;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }
     }
-)
+);
 
 export const getMessage = createAsyncThunk(
     'messages/getOne',
@@ -41,7 +47,7 @@ export const getMessage = createAsyncThunk(
 
 export const solvedMessage = createAsyncThunk(
     'messages/solve',
-    async (id: number, thunkAPI) => {
+    async (id: string, thunkAPI) => {
         try {
             await axios.patch(`${import.meta.env.VITE_BACKEND_API}/messages/${id}`, null, {withCredentials:true});
         } catch (error) {

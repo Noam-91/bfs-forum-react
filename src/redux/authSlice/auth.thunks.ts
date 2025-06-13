@@ -34,7 +34,7 @@ export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unk
     async (_, thunkAPI) => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/auth`, {withCredentials:true});
-            const user: IUser = response.data;
+            const user: IUser = response.data.user;
             sessionStorage.setItem('role', user.role);
             return { user };
         } catch (error) {

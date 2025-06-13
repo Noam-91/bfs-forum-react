@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 
 import type IUser from '../../shared/models/IUser';
-import './UserManager.css';
+import './UserManagement.css';
 import Nav from '../../components/nav/Nav';
 import {activateUser, banUser, getAllUsers} from "../../redux/userSlice/user.thunks.ts";
 
 const UserManager = () => {
+
     const dispatch = useAppDispatch();
     const {userPage: users, status} = useAppSelector(state=>state.user);
     console.log('Fetched users:', users);

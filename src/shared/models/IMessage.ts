@@ -8,10 +8,21 @@ export interface IMessage {
     updatedAt: Date;
     updatedBy: string;
 }
+
 type MessageStatus = 'SOLVED' | 'UNSOLVED';
 
 export interface ContactFormData {
     email: string;
     subject: string;
     content: string;
+}
+
+export interface PaginatedMessageResponse {
+    content: IMessage[];
+    totalPages: number;
+    totalElements: number;
+    number: number;
+    size: number;
+    first: boolean;
+    last: boolean;
 }

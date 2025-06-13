@@ -11,7 +11,6 @@ export const register = createAsyncThunk('users/register', async (userData:IUser
     }
 });
 
-
 export const verifyEmail = createAsyncThunk(
     'users/verifyEmail',
     async (token, thunkAPI) => {
@@ -22,7 +21,6 @@ export const verifyEmail = createAsyncThunk(
         }
     }
 );
-
 
 export const getUserProfile = createAsyncThunk<
     IUser,
@@ -38,7 +36,6 @@ export const getUserProfile = createAsyncThunk<
         }
     }
 );
-
 
 export const updateProfile = createAsyncThunk(
     'users/updateProfile',
@@ -99,7 +96,8 @@ export const getAllUsers = createAsyncThunk(
     'users/getAllUsers',
     async (params:GetAllUsersParams, thunkAPI) => {
         try {
-            const response = await axios.get(`http://localhost:8080/users/page?${buildParams(params)}`, {withCredentials:true});
+            const response = await axios.get(`http://localhost:8080/users/page${buildParams(params)}`, {withCredentials:true});
+            console.log("response from /users/page:", response.data);
             return response.data;
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
@@ -107,7 +105,6 @@ export const getAllUsers = createAsyncThunk(
     }
 );
 
-/** Build query params from object. */
 const buildParams = (params: GetAllUsersParams): string => {
     const query = Object.entries(params)
         .filter(([, value]) => value !== undefined && value !== null && value !== '')
