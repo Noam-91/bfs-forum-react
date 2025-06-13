@@ -13,14 +13,14 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import type { AppDispatch, RootState } from "../redux/store";
+import type { AppDispatch, RootState } from "../../redux/store";
 import {
   getPostById,
   transferPostStatus,
   toggleReplyActive,
-} from "../redux/postSlice/post.thunks";
+} from "../../redux/postSlice/post.thunks";
 import styles from "./PostDetailAdmin.module.scss";
-import type { PostOperation } from "../shared/models/IPost";
+import type { PostOperation } from "../../shared/models/IPost";
 
 const PostDetailAdmin: React.FC = () => {
   const { postId } = useParams<{ postId: string }>();

@@ -1,4 +1,4 @@
-
+// IUser.ts
 export default interface IUser{
     avatarUrl: string;
     firstName: string;
@@ -9,6 +9,7 @@ export default interface IUser{
     password?:string,
     role:Role,
     isActive:boolean
+    createdAt?: string
 }
 
 

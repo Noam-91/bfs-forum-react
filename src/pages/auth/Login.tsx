@@ -42,13 +42,7 @@ const Login = () => {
         console.log('isLoggedIn:', isLoggedIn, 'role:', userRole);
         if (isLoggedIn) {
             showAlert('success', 'Login', 'Login successful!');
-            if (userRole === 'ADMIN' || userRole === 'SUPER_ADMIN') {
-                navigate('/admin/users');
-            } else if (userRole === 'VISITOR' || userRole === 'UNVERIFIED' || userRole === 'USER') {
-                navigate('/user/home');
-            } else {
-                navigate('/unknown-role'); // this not implemented yet
-            }
+            navigate('/');
         }
     }, [isLoggedIn, userRole, navigate, showAlert]);
 

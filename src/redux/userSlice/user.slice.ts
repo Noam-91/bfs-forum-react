@@ -1,79 +1,160 @@
-import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { register, verifyEmail } from './user.thunks';
+import {createSlice} from '@reduxjs/toolkit';
+import type IUser from "../../shared/models/IUser.ts";
+import type {Page} from "../../shared/models/Page.ts";
+import {
+    register,
+    verifyEmail,
+    updateProfile,
+    getUserProfile,
+    banUser,
+    activateUser,
+    updateUserRole, getAllUsers
+} from "./user.thunks.ts";
 
-interface RegisterState {
-    registerStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
-    registerError: string | null;
-
-    verifyStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
-    verifyError: string | null;
-    verifiedFirstName: string | null;
+interface IUserState{
+    userPage: Page<IUser> | null;
+    currentUser: IUser | null;
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null;
 }
+type ErrorResponse = {
+    message: string;
+};
 
-const initialState: RegisterState = {
-    registerStatus: 'idle',
-    registerError: null,
-
-    verifyStatus: 'idle',
-    verifyError: null,
-    verifiedFirstName: null,
+const initialState: IUserState = {
+    userPage: null,
+    currentUser: null,
+    status: 'idle',
+    error: null,
 };
 
 const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        resetRegisterState(state) {
-            state.registerStatus = 'idle';
-            state.registerError = null;
-        },
-        resetVerifyState(state) {
-            state.verifyStatus = 'idle';
-            state.verifyError = null;
-            state.verifiedFirstName = null;
+        resetUserState: (state) => {
+            state.userPage = null;
+            state.currentUser = null;
+            state.status = 'idle';
+            state.error = null;
         },
     },
     extraReducers: (builder) => {
         builder
-            // 注册
+            // Register
             .addCase(register.pending, (state) => {
-                state.registerStatus = 'loading';
-                state.registerError = null;
+                state.status = 'loading';
+                state.error = null;
             })
             .addCase(register.fulfilled, (state) => {
-                state.registerStatus = 'succeeded';
+                state.status = 'succeeded';
+                state.error = null;
             })
-            .addCase(register.rejected, (state, action: PayloadAction<any>) => {
-                state.registerStatus = 'failed';
-                state.registerError = action.payload || 'Registration failed.';
+            .addCase(register.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Registration failed.';
             })
 
-            // 邮箱验证
+            // Email Verification
             .addCase(verifyEmail.pending, (state) => {
-                state.verifyStatus = 'loading';
-                state.verifyError = null;
+                state.status = 'loading';
+                state.error = null;
             })
-            .addCase(verifyEmail.fulfilled, (state, action) => {
-                state.verifyStatus = 'succeeded';
-                state.verifiedFirstName = action.payload.user.firstName;
+            .addCase(verifyEmail.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
             })
-            .addCase(verifyEmail.rejected, (state, action: PayloadAction<any>) => {
-                state.verifyStatus = 'failed';
-                state.verifyError = action.payload || 'Verification failed.';
-            });
-    },
+            .addCase(verifyEmail.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Verification failed.';
+            })
+
+            // Get User Profile
+            .addCase(getUserProfile.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getUserProfile.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                state.currentUser = action.payload;
+                state.error = null;
+            })
+            .addCase(getUserProfile.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Get user profile failed.';
+            })
+
+            // Update User Profile
+            .addCase(updateProfile.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateProfile.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
+            })
+            .addCase(updateProfile.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Update failed.';
+            })
+
+            // Ban User
+            .addCase(banUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(banUser.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
+            })
+            .addCase(banUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Ban user failed.';
+            })
+
+            // Activate User
+            .addCase(activateUser.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(activateUser.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
+            })
+            .addCase(activateUser.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Activate user failed.';
+            })
+
+            // updateUserRole
+            .addCase(updateUserRole.pending, (state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(updateUserRole.fulfilled, (state) => {
+                state.status = 'succeeded';
+                state.error = null;
+            })
+            .addCase(updateUserRole.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Update user role failed.';
+            })
+
+            // getAllUsers
+            .addCase(getAllUsers.pending,(state) => {
+                state.status = 'loading';
+                state.error = null;
+            })
+            .addCase(getAllUsers.fulfilled, (state,action) => {
+                state.status = 'succeeded';
+                state.error = null;
+                state.userPage = action.payload;
+            })
+            .addCase(getAllUsers.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = (action.payload as ErrorResponse).message || 'Update user role failed.';
+            })
+    }
 });
 
-export const { resetRegisterState, resetVerifyState } = userSlice.actions;
-
 export default userSlice.reducer;
-
-import type { RootState } from '../../redux/store';
-
-export const selectRegisterStatus = (state: RootState) => state.user.registerStatus;
-export const selectRegisterError = (state: RootState) => state.user.registerError;
-
-export const selectVerifyStatus = (state: RootState) => state.user.verifyStatus;
-export const selectVerifyError = (state: RootState) => state.user.verifyError;
-export const selectVerifiedFirstName = (state: RootState) => state.user.verifiedFirstName;

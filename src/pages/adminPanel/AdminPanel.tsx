@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import type { RootState, AppDispatch } from "../redux/store";
+import type { RootState, AppDispatch } from "../../redux/store";
 // import { fetchPosts, moderatePost } from "../redux/postsSlice/posts.slice";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -11,8 +11,8 @@ import MenuItem from "@mui/material/MenuItem";
 import TextField from "@mui/material/TextField";
 import styles from "./AdminPanel.module.scss";
 import { useNavigate } from "react-router-dom";
-import type { IPost } from "../shared/models/IPost";
-import { getAllPosts, getQueriedPosts, transferPostStatus } from "../redux/postSlice/post.thunks";
+import type { IPost } from "../../shared/models/IPost";
+import { getQueriedPosts, transferPostStatus } from "../../redux/postSlice/post.thunks";
 
 
 
