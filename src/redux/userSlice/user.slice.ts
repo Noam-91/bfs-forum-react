@@ -157,4 +157,19 @@ const userSlice = createSlice({
     }
 });
 
+<<<<<<< HEAD
 export default userSlice.reducer;
+=======
+export const { resetRegisterState, resetVerifyState } = userSlice.actions;
+
+export default userSlice.reducer;
+
+import type { RootState } from '../../redux/store';
+
+export const selectRegisterStatus = (state: RootState) => state.user.registerStatus;
+export const selectRegisterError = (state: RootState) => state.user.registerError;
+
+export const selectVerifyStatus = (state: RootState) => state.user.verifyStatus;
+export const selectVerifyError = (state: RootState) => state.user.verifyError;
+export const selectVerifiedFirstName = (state: RootState) => state.user.verifiedFirstName;
+>>>>>>> 20172410e72a88cf47c0ba674c02aeda497df803

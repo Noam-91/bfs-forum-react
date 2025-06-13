@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // IUser.ts
+=======
+
+>>>>>>> 20172410e72a88cf47c0ba674c02aeda497df803
 export default interface IUser{
     avatarUrl: string;
     firstName: string;

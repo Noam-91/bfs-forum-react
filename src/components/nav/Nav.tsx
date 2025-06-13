@@ -30,11 +30,21 @@ const Nav = () => {
             <HomeIcon />
         </Link>
       </div>
-
-        <div className={styles.navRight}>
-            {user && <NavLink
-                to={`/users/${user.id}/profile`}
-                className={styles.navUsername}
+      {user && (
+        <div>
+          
+          <button
+            onClick={() => navigate(`/users/${user.id}/profile`)}
+            className={styles.navButton}
+          >
+            Edit Profile
+          </button>
+        </div>
+      )}
+      <div className={styles.navRight}>
+          {user && <NavLink
+            to={`/users/${user.id}/profile`}
+            className={styles.navUsername}
             >
                 {user.username}
             </NavLink>}
