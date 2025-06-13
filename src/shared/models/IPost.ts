@@ -1,8 +1,7 @@
+//IPost.ts
 export interface IPost {
     id?: string;
-    userId?: string;
-    firstName?: string;
-    lastName?: string;
+    userInfo: IUserInfo;
     title: string;
     content: string;
     status: 'UNPUBLISHED'|"PUBLISHED"|"HIDDEN"|"BANNED"|"ARCHIVED"|"DELETED";
@@ -17,7 +16,7 @@ export interface IPost {
 
 export interface IReply {
     id?: string;
-    userId?: string;
+    userInfo: IUserInfo;
     comment: string;
     isActive: boolean;
     createdAt?: Date;
@@ -26,10 +25,17 @@ export interface IReply {
 
 export interface ISubReply {
     id?: string;
-    userId?: string;
+    userInfo: IUserInfo;
     comment: string;
     isActive: boolean;
     createdAt?: Date;
+}
+
+interface IUserInfo {
+    id: string;
+    firstName?: string;
+    lastName?: string;
+    imgUrl?: string;
 }
 
 export interface IPostQueryParameters {
@@ -39,8 +45,9 @@ export interface IPostQueryParameters {
     sortDir?: 'asc' | 'desc';
     status?: string;
     keyword?: string;
-    searchIn?: 'title' | 'content' | 'author';
+    searchIn?: 'title' | 'content';
     userId?: string;
 }
+
 
 export type PostOperation = 'BAN'|'UNBAN'|'HIDE'|'SHOW'|'DELETE'|'RECOVER'|'ARCHIVE'|'UNARCHIVE';

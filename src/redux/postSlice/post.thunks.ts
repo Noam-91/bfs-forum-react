@@ -1,9 +1,23 @@
-import {createAsyncThunk} from "@reduxjs/toolkit";
+ import {createAsyncThunk} from "@reduxjs/toolkit";
 import axios from "axios";
 import {handleThunkAxiosError} from "../../shared/utils/thunkErrorHandlers.ts";
 import type IErrorResponse from "../../shared/models/IErrorResponse.ts";
 import type {IPost, IPostQueryParameters, PostOperation} from "../../shared/models/IPost.ts";
 import type {Page} from "../../shared/models/Page.ts";
+
+// post.thunks.ts
+
+export const getAllPosts = createAsyncThunk<IPost[]>(
+  'posts/getAllPosts',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get<IPost[]>('/api/admin/posts/all'); // Adjust your backend route
+      return response.data;
+    } catch (err) {
+      return thunkAPI.rejectWithValue('Failed to fetch all posts');
+    }
+  }
+);
 
 export const getQueriedPosts = createAsyncThunk<
     Page<IPost>,
@@ -13,6 +27,7 @@ export const getQueriedPosts = createAsyncThunk<
     'posts/getPostPage',
     async (params: IPostQueryParameters, thunkAPI) => {
         try {
+            console.log(params)
             const queryString = buildQueryParams(params);
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/posts${queryString}`, {withCredentials:true});
             return response.data;
@@ -141,6 +156,46 @@ export const toggleReplyActive = createAsyncThunk<
         }
     }
 );
+
+export const getTop3UserPosts = createAsyncThunk<IPost[], string>(
+  'posts/getTop3UserPosts',
+  async (userId, thunkAPI) => {
+    try {
+      const res = await axios.get(`/posts`, {
+        params: {
+          userId,
+          status: 'PUBLISHED',
+          sortBy: 'replyCount',
+          sortDir: 'desc',
+          size: 3
+        },
+        withCredentials: true,
+      });
+      return res.data.content; // assuming Page<IPost>
+    } catch (err) {
+      return handleThunkAxiosError(err, thunkAPI);
+    }
+  }
+);
+
+export const getUserDrafts = createAsyncThunk<IPost[], string>(
+  'posts/getUserDrafts',
+  async (userId, thunkAPI) => {
+    try {
+      const res = await axios.get(`/posts`, {
+        params: {
+          userId,
+          status: 'UNPUBLISHED',
+        },
+        withCredentials: true,
+      });
+      return res.data.content;
+    } catch (err) {
+      return handleThunkAxiosError(err, thunkAPI);
+    }
+  }
+);
+
 
 /** Build query params from object. */
 const buildQueryParams = (params: IPostQueryParameters): string => {

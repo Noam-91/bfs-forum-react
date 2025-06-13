@@ -2,21 +2,22 @@ import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
 import type {IPostQueryParameters} from "../../shared/models/IPost.ts";
 import {getQueriedPosts} from "../../redux/postSlice/post.thunks.ts";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import styles from './Home.module.scss';
-import PostItem from "./PostItem.tsx";
-import {useAlert} from "../../components/alert/AlertHook.tsx";
+import PostItem from "../../components/post-item/PostItem.tsx";
 
 const Home = () => {
     const dispatch = useAppDispatch();
     const navigate  = useNavigate();
-    const {postPage, status, error } = useAppSelector((state) => state.post);
+    const {page} = useParams();
+    const {postPage, status} = useAppSelector((state) => state.post);
     const [searchTerm, setSearchTerm] = useState<string>('');
-    const [searchBy, setSearchBy] = useState<'title' | 'content' | 'author'>('title');
+    const [searchBy, setSearchBy] = useState<'title' | 'content'>('title');
 
     /** Initialize */
     useEffect(() => {
         const queryParams: IPostQueryParameters = {
+            page: page ? parseInt(page) : 0,
             size: 6,
             sortBy: "viewCount",
             sortDir: "desc"
@@ -35,20 +36,21 @@ const Home = () => {
         dispatch(getQueriedPosts(searchParams));
 
         //testOnly: no post list page implemented yet.
-        // navigate('/posts', { state: { searchParams } });
+        navigate('/posts', { state: { searchParams } });
     };
 
-    /** Alert */
-    const {showAlert} = useAlert();
-    useEffect(() => {
-        if (status === 'failed') {
-            showAlert('error', 'Error', error || 'Failed to fetch posts.');
-            const timer = setTimeout(() => {
-                // dispatch(resetContactStatus());
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [status, error, dispatch]);
+    /** PostItem prep */
+    type positionParams = {
+        left0: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
+        left1: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
+        left2?: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt',
+        right: 'author'|'replyCount'|'createdAt'|'viewCount'|'viewAt'
+    }
+    const params:positionParams = {
+        left0: 'author',
+        left1: 'createdAt',
+        right: 'viewCount'
+    }
 
     return (
         <div className={styles.homePageContainer}>
@@ -65,7 +67,7 @@ const Home = () => {
                 />
                 <select
                     value={searchBy}
-                    onChange={(e) => setSearchBy(e.target.value as 'title' | 'content' | 'author')}
+                    onChange={(e) => setSearchBy(e.target.value as 'title' | 'content')}
                     className={styles.searchSelect}
                 >
                     <option value="title">Title</option>
@@ -93,7 +95,7 @@ const Home = () => {
                     <p className={styles.noPostsMessage}>No hot posts loaded yet.</p>
                 ) : postPage&&postPage.content?.length > 0 ? (
                     postPage.content.map((post) => (
-                        <PostItem key={post.id} post={post}/>
+                        <PostItem key={post.id} post={post} {...params} />
                     ))
                 ) : (
                     status !== 'loading' && <p className={styles.noPostsMessage}>No hot posts available.</p>

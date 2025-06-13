@@ -68,7 +68,6 @@ const Contact = () => {
         }
     }, [status, error, dispatch]);
 
-
     return (
         <div className={styles.container}>
             <h1 className={styles.heading}>Contact Us</h1>
@@ -132,7 +131,9 @@ const Contact = () => {
                 >
                     {status === 'loading' ? 'Sending...' : 'Send Message'}
                 </button>
+                <a href="/login">Back to login</a>
             </form>
+
         </div>
     );
 };

@@ -1,0 +1,86 @@
+.postDetailAdmin {
+  padding: 2rem; // space from screen edges
+}
+
+.nav {
+  margin-bottom: 2rem;
+  border-radius: 12px;
+}
+
+.adminCard {
+  margin-bottom: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.cardContent {
+  padding: 1.5rem;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.reportList {
+  margin-top: 0.5rem;
+}
+.replyCard {
+  display: flex;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.replyContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+
+.subReplyContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.leftColumn {
+  flex: 1;
+}
+
+.replyActions {
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  min-width: 120px;
+}
+
+.subReplyContainer {
+  margin-top: 12px;
+  padding-left: 16px;
+  border-left: 2px solid #e0e0e0;
+}
+
+.subReplyCard {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #f5f5f5;
+  width: 100%;
+}
+
+.avatarSmall {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  object-fit: cover;
+  margin-bottom: 4px;
+}

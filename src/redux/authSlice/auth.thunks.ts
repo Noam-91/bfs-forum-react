@@ -9,6 +9,7 @@ export const login = createAsyncThunk(
     async (loginForm: ILoginFormData, thunkAPI) => {
         try {
             await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/login`, loginForm,{withCredentials:true});
+            await thunkAPI.dispatch(checkAuth());
         } catch (error) {
             return handleThunkAxiosError(error, thunkAPI);
         }
@@ -20,22 +21,25 @@ export const logout = createAsyncThunk(
     async (_,thunkAPI) => {
         try{
             await axios.post(`${import.meta.env.VITE_BACKEND_API}/auth/logout`,null,{withCredentials:true});
+            await thunkAPI.dispatch(checkAuth());
         } catch (error: unknown) { // Good: using unknown
             return handleThunkAxiosError(error, thunkAPI);
         }
+        sessionStorage.removeItem('role');
     }
 );
 
-export const checkAuth = createAsyncThunk< {user:IUser}, void, {rejectValue: unknown}>(
+export const checkAuth = createAsyncThunk(
     'auth/checkAuth',
     async (_, thunkAPI) => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_BACKEND_API}/auth`, {withCredentials:true});
             const user: IUser = response.data;
+            sessionStorage.setItem('role', user.role);
             return { user };
         } catch (error) {
+            sessionStorage.removeItem('role');
             return handleThunkAxiosError(error, thunkAPI);
         }
     }
 );
-
