@@ -3,16 +3,19 @@ import styles from './Nav.module.scss';
 import { useAppSelector, useAppDispatch } from '../../redux/hooks';
 import {checkAuth, logout} from "../../redux/authSlice/auth.thunks.ts";
 import {Tooltip} from "@mui/material";
-// import LogoutIcon from '../../assets/icons/logout.svg';
-// import HomeIcon from '../../assets/icons/home.svg';
 
 import { useNavigate } from 'react-router-dom';
+import {useEffect} from "react";
 
 
 const Nav = () => {
     const {user} = useAppSelector((state) => state.auth);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!user) dispatch(checkAuth())
+    }, [user,dispatch]);
 
     const handleLogout = () =>{
         dispatch(logout());

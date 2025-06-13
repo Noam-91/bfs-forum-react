@@ -44,7 +44,7 @@ export interface IPostQueryParameters {
     sortDir?: 'asc' | 'desc';
     status?: string;
     keyword?: string;
-    searchIn?: 'title' | 'content' | 'author';
+    searchIn?: 'title' | 'content';
     userId?: string;
 }
 

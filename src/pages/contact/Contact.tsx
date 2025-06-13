@@ -7,6 +7,7 @@ import {useEffect} from "react";
 import styles from './Contact.module.scss';
 import {sendMessage} from "../../redux/messageSlice/message.thunks.ts";
 import type {ContactFormData} from "../../shared/models/IMessage.ts";
+import Upload from "../../components/upload/UploadCell.tsx";
 
 const Contact = () => {
     const dispatch = useAppDispatch();
@@ -68,6 +69,9 @@ const Contact = () => {
         }
     }, [status, error, dispatch]);
 
+    const handleUpload = (url:string) => {
+        console.log('File uploaded:', url);
+    };
 
     return (
         <div className={styles.container}>
@@ -133,6 +137,7 @@ const Contact = () => {
                     {status === 'loading' ? 'Sending...' : 'Send Message'}
                 </button>
             </form>
+
         </div>
     );
 };

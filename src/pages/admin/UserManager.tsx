@@ -6,13 +6,12 @@ import './UserManager.css';
 import Nav from '../../components/nav/Nav';
 import {activateUser, banUser, getAllUsers} from "../../redux/userSlice/user.thunks.ts";
 
-const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
-
 const UserManager = () => {
     const dispatch = useAppDispatch();
     const {userPage: users, status} = useAppSelector(state=>state.user);
     console.log('Fetched users:', users);
     const {number:page, totalPages} = users!;
+    const roles = ['ALL', 'VISITOR', 'UNVERIFIED', 'USER', 'ADMIN', 'SUPER_ADMIN'];
 
     const [pageSize] = useState(3);
     const [usernameFilter, setUsernameFilter] = useState('');

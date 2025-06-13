@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../../redux/hooks.ts";
 import type {IPostQueryParameters} from "../../shared/models/IPost.ts";
 import {getQueriedPosts} from "../../redux/postSlice/post.thunks.ts";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import styles from './Home.module.scss';
 import PostItem from "../../components/post-item/PostItem.tsx";
 import {useAlert} from "../../components/alert/AlertHook.tsx";
@@ -10,6 +10,7 @@ import {useAlert} from "../../components/alert/AlertHook.tsx";
 const Home = () => {
     const dispatch = useAppDispatch();
     const navigate  = useNavigate();
+    const {page} = useParams();
     const {postPage, status, error } = useAppSelector((state) => state.post);
     const [searchTerm, setSearchTerm] = useState<string>('');
     const [searchBy, setSearchBy] = useState<'title' | 'content' | 'author'>('title');
@@ -17,6 +18,7 @@ const Home = () => {
     /** Initialize */
     useEffect(() => {
         const queryParams: IPostQueryParameters = {
+            page: page ? parseInt(page) : 0,
             size: 6,
             sortBy: "viewCount",
             sortDir: "desc"
